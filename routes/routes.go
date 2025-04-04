@@ -6,13 +6,21 @@ import (
 )
 
 func SetupRoutes(app *fiber.App) {
-    api := app.Group("/api")
+	api := app.Group("/api")
 
-    // Auth Routes
-    api.Post("/signup", controllers.Signup)
-    api.Post("/login", controllers.Login)
+	api.Post("/signup", controllers.Signup)
+	api.Post("/login", controllers.Login)
+	api.Post("/logout", controllers.Logout)
 
-    // Complaint Routes
-    api.Post("/complaints", controllers.CreateComplaint)
-    api.Get("/complaints", controllers.GetComplaints)
+	api.Post("/complaints", controllers.CreateComplaint)
+	api.Get("/complaints", controllers.GetAllComplaints)
+	api.Get("/complaints/student", controllers.GetStudentComplaints)
+	api.Put("/complaints/:id/status", controllers.UpdateComplaintStatus)
+	api.Delete("/complaints/:id", controllers.DeleteComplaint)
+
+	api.Post("/apologies", controllers.SubmitApology)
+	api.Get("/apologies", controllers.GetAllApologies)
+	api.Get("/apologies/student", controllers.GetStudentApologies)
+	api.Put("/apologies/:id/status", controllers.UpdateApologyStatus)
+	api.Delete("/apologies/:id", controllers.DeleteApology)
 }

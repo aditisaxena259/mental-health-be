@@ -12,37 +12,36 @@ import (
 )
 
 func main() {
-    // Load environment variables
-    app := fiber.New()
+	// Load environment variables
+	if err := godotenv.Load(); err != nil {
+		log.Println("⚠️ Warning: No .env file found")
+	}
+
+	// Connect to PostgreSQL
+	if err := config.ConnectDatabase(); err != nil {
+		log.Fatal("❌ Failed to connect to the database:", err)
+	}
+	log.Println("✅ Connected to PostgreSQL!")
+
+	
+	models.AutoMigrateAll()
+    models.SeedData()
+	log.Println("📦 Database migrations completed successfully!")
+
+	// Initialize Fiber app
+	app := fiber.New()
 
 	// Enable CORS Middleware
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "http://localhost:3000", // Allow requests from your frontend
+		AllowOrigins: "http://localhost:3000", // frontend origin
 		AllowMethods: "GET,POST,PUT,DELETE,OPTIONS",
 		AllowHeaders: "Origin, Content-Type, Accept, Authorization",
 	}))
-    if err := godotenv.Load(); err != nil {
-        log.Println("Warning: No .env file found")
-    }
 
-    // Connect to the database (Using GORM)
-    if err := config.ConnectDatabase(); err != nil {
-        log.Fatal("Failed to connect to the database:", err)
-    }
+	// Setup API routes
+	routes.SetupRoutes(app)
 
-    
-    // Run database migrations
-    if err := config.DB.AutoMigrate(&models.User{}, &models.Complaint{}); err != nil {
-        log.Fatal("Failed to migrate database:", err)
-    }
-
-    log.Println("Database migrated successfully!")
-
-    // Initialize Fiber app
-    
-    routes.SetupRoutes(app)
-
-    // Start the server
-    log.Fatal(app.Listen(":8080"))
-
+	// Start server
+	log.Println("🚀 Server running at http://localhost:8080")
+	log.Fatal(app.Listen(":8080"))
 }

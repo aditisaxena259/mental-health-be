@@ -5,38 +5,47 @@ import (
 	"github.com/google/uuid"
 	"time"
 )
-
 type ComplaintType string
 
 const (
-	Roommate    ComplaintType = "roommate"
-	Plumbing    ComplaintType = "plumbing"
-	Cleanliness ComplaintType = "cleanliness"
-	Miscellaneous ComplaintType = "miscellaneous"
+	Roommate      ComplaintType = "roommate"
+	Plumbing      ComplaintType = "plumbing"
+	Cleanliness   ComplaintType = "cleanliness"
+	Electricity   ComplaintType = "electricity"
+	LostFound     ComplaintType = "Lost and Found"
+	Miscellaneous ComplaintType = "Other Issues"
 )
 
-type StatusType1 string
+type ComplaintStatus string
 
 const (
-	Open       StatusType = "open"
-	InProgress StatusType = "inprogress"
-	Resolved   StatusType = "resolved"
+	Open       ComplaintStatus = "open"
+	InProgress ComplaintStatus = "inprogress"
+	Resolved   ComplaintStatus = "resolved"
 )
 
 type Complaint struct {
-	ID          uuid.UUID     `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
-	UserID      uuid.UUID     `gorm:"not null"`
-	Type        ComplaintType `gorm:"type:complaint_type;not null"` // Use ENUM
-	Description string        `gorm:"type:text;not null"`
-	Status      StatusType    `gorm:"type:status_type;not null;default:'open'"`
-	CreatedAt   time.Time
+	ID          uuid.UUID       `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
+	Title       string          `gorm:"type:text;not null"`
+	UserID      uuid.UUID       `gorm:"type:uuid;not null"`
+	Type        ComplaintType   `gorm:"type:complaint_type;not null"`
+	Description string          `gorm:"type:text;not null"`
+	Status      ComplaintStatus `gorm:"type:status_type;default:'open'"`
+	CreatedAt   time.Time       `gorm:"autoCreateTime"`
+
+	User        User            `gorm:"foreignKey:UserID;references:ID" json:"user"`
+	Student     StudentModel    `gorm:"foreignKey:UserID;references:UserID" json:"student"`
+	Attachments []Attachment    `gorm:"foreignKey:ComplaintID" json:"attachments"`
+	Timeline    []TimelineEntry `gorm:"foreignKey:ComplaintID" json:"timeline"`
 }
 
-// ✅ Ensure ENUMs exist before creating the table
+
 func MigrateDatabase() {
 	config.DB.Exec(`DO $$ BEGIN 
         IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'complaint_type') THEN 
-            CREATE TYPE complaint_type AS ENUM ('roommate', 'plumbing', 'cleanliness', 'miscellaneous'); 
+            CREATE TYPE complaint_type AS ENUM (
+                'roommate', 'plumbing', 'cleanliness', 'electricity', 'Lost and Found', 'Other Issues'
+            ); 
         END IF; 
     END $$;`)
 
@@ -46,5 +55,5 @@ func MigrateDatabase() {
         END IF; 
     END $$;`)
 
-	config.DB.AutoMigrate(&Complaint{})
+	config.DB.AutoMigrate(&User{}, &Attachment{}, &TimelineEntry{}, &Complaint{})
 }

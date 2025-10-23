@@ -19,7 +19,6 @@ func Signup(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"error": "Invalid input"})
 	}
 
-	// ✅ Fix validation (corrected comparison for role)
 	if data["name"] == "" || data["email"] == "" || data["password"] == "" || data["role"] == "" {
 		return c.Status(400).JSON(fiber.Map{"error": "Name, email, password, and role are required"})
 	}

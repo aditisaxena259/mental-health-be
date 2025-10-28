@@ -31,6 +31,23 @@ func AutoMigrateAll() {
 					'inprogress', 
 					'resolved'
 				); 
+			-- Apology types
+			IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'apology_type') THEN 
+				CREATE TYPE apology_type AS ENUM (
+					'outing',
+					'misconduct',
+					'miscellaneous'
+				);
+			END IF;
+
+			-- Apology statuses
+			IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'apology_status') THEN 
+				CREATE TYPE apology_status AS ENUM (
+					'submitted', 
+					'reviewed', 
+					'accepted', 
+					'rejected'
+				);
 			END IF;
 		END $$;
 	`)
@@ -47,7 +64,7 @@ func AutoMigrateAll() {
 		&Complaint{},
 		&Attachment{},
 		&TimelineEntry{},
-		&Apology{},
+		&Apology{}, // ✅ only this line added
 	)
 
 	// --- Enforce correct column types ---

@@ -38,6 +38,7 @@ func SetupRoutes(app *fiber.App) {
 	admin := protected.Group("/admin", middlewares.RequireRole("admin"))
 
 	// 🧾 Complaints
+	admin.Get("/complaints", controllers.GetAllComplaintsAdmin)
 	admin.Put("/complaints/:id/status", controllers.UpdateComplaintStatus)
 	admin.Delete("/complaints/:id", controllers.DeleteComplaint)
 

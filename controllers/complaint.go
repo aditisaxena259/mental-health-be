@@ -187,3 +187,29 @@ func GetComplaintbyID(c *fiber.Ctx) error {
 
 	return c.JSON(response)
 }
+
+
+//get all complaints by admin
+// 🧑‍💼 ADMIN — Get All Complaints (with optional filters)
+func GetAllComplaintsAdmin(c *fiber.Ctx) error {
+	var complaints []models.Complaint
+
+	query := config.DB.Preload("User").Preload("Student").Preload("Attachments").Preload("Timeline")
+
+	// Optional filters
+	if status := c.Query("status"); status != "" {
+		query = query.Where("status = ?", status)
+	}
+	if complaintType := c.Query("type"); complaintType != "" {
+		query = query.Where("type = ?", complaintType)
+	}
+
+	if err := query.Order("created_at desc").Find(&complaints).Error; err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": "Failed to fetch complaints"})
+	}
+
+	return c.JSON(fiber.Map{
+		"count": len(complaints),
+		"data":  complaints,
+	})
+}

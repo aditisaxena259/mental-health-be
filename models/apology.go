@@ -6,9 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// Optional: Custom status type
 type ApologyStatus string
-
 const (
 	ApologySubmitted ApologyStatus = "submitted"
 	ApologyReviewed  ApologyStatus = "reviewed"
@@ -17,21 +15,22 @@ const (
 )
 
 type ApologyType string
-const(
-	Apologyforouting ApologyType ="outing"
-	Apologyformisconduct ApologyType="misconduct"
-	Apologyforotherreason ApologyType="miscellaneous"
+const (
+	ApologyForOuting        ApologyType = "outing"
+	ApologyForMisconduct    ApologyType = "misconduct"
+	ApologyForOtherReason   ApologyType = "miscellaneous"
 )
+
 type Apology struct {
-	ID          uuid.UUID     `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
-	StudentID   uuid.UUID     `gorm:"type:uuid;not null" json:"student_id"` // use uuid not string
+	ID          uuid.UUID     `gorm:"type:uuid;default:gen_random_uuid();primaryKey" json:"id"`
+	StudentID   uuid.UUID     `gorm:"type:uuid;not null" json:"student_id"`
 	ApologyType ApologyType   `gorm:"type:text;not null" json:"type"`
-	Message     string        `gorm:"type:text;not null"`
-	Description string        `gorm:"type:text"`
+	Message     string        `gorm:"type:text;not null" json:"message"`
+	Description string        `gorm:"type:text" json:"description"`
 	Status      ApologyStatus `gorm:"type:text;default:'submitted'" json:"status"`
-	Comment     string        `gorm:"type:text"`
+	Comment     string        `gorm:"type:text" json:"comment"`
 	CreatedAt   time.Time     `gorm:"autoCreateTime" json:"created_at"`
 
-	Student StudentModel `gorm:"foreignKey:StudentID;references:UserID" json:"student"`
+	// ✅ fix relationship properly
+	Student StudentModel `gorm:"foreignKey:StudentID;references:UserID;constraint:OnDelete:CASCADE;" json:"student"`
 }
-

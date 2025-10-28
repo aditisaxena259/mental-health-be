@@ -53,8 +53,21 @@ func Signup(c *fiber.Ctx) error {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to create user"})
 	}
 
+	// 🆕 If role = "student", also create a StudentModel record
+	if user.Role == "student" {
+		student := models.StudentModel{
+			UserID: user.ID,
+			Hostel: "",
+			RoomNo: "",
+		}
+		if err := config.DB.Create(&student).Error; err != nil {
+			return c.Status(500).JSON(fiber.Map{"error": "Failed to create student record"})
+		}
+	}
+
 	return c.JSON(fiber.Map{"message": "User created successfully"})
 }
+
 
 func Login(c *fiber.Ctx) error {
 	var data map[string]string

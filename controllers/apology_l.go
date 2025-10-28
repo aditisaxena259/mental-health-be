@@ -9,7 +9,6 @@ import (
 
 // 🧑‍🎓 STUDENT — Submit Apology Letter
 func SubmitApology(c *fiber.Ctx) error {
-	// Extract logged-in student ID from JWT
 	userID, ok := c.Locals("user_id").(string)
 	if !ok || userID == "" {
 		return c.Status(401).JSON(fiber.Map{"error": "Unauthorized: missing user ID"})
@@ -29,7 +28,6 @@ func SubmitApology(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"error": "Message field is required"})
 	}
 
-	// ✅ Convert userID string → uuid.UUID
 	studentUUID, err := uuid.Parse(userID)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{"error": "Invalid user ID"})
@@ -47,6 +45,9 @@ func SubmitApology(c *fiber.Ctx) error {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to submit apology", "details": err.Error()})
 	}
 
+	// ✅ Preload after creation so response includes Student details
+	config.DB.Preload("Student.User").First(&apology, "id = ?", apology.ID)
+
 	return c.JSON(fiber.Map{
 		"message": "Apology letter submitted successfully",
 		"data":    apology,
@@ -61,7 +62,11 @@ func GetStudentApologies(c *fiber.Ctx) error {
 	}
 
 	var apologies []models.Apology
-	if err := config.DB.Where("student_id = ?", userID).Order("created_at desc").Find(&apologies).Error; err != nil {
+	if err := config.DB.
+		Preload("Student.User").
+		Where("student_id = ?", userID).
+		Order("created_at desc").
+		Find(&apologies).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to fetch apologies"})
 	}
 
@@ -75,7 +80,7 @@ func GetStudentApologies(c *fiber.Ctx) error {
 // 🧑‍💼 ADMIN — Get All or Filtered Apologies
 func GetApologies(c *fiber.Ctx) error {
 	var apologies []models.Apology
-	query := config.DB
+	query := config.DB.Preload("Student.User")
 
 	if apologyType := c.Query("type"); apologyType != "" {
 		query = query.Where("apology_type = ?", apologyType)
@@ -96,14 +101,14 @@ func GetApologyByID(c *fiber.Ctx) error {
 	id := c.Params("id")
 	var apology models.Apology
 
-	if err := config.DB.First(&apology, "id = ?", id).Error; err != nil {
+	if err := config.DB.Preload("Student.User").First(&apology, "id = ?", id).Error; err != nil {
 		return c.Status(404).JSON(fiber.Map{"error": "Apology not found"})
 	}
 
 	return c.JSON(apology)
 }
 
-// 🧑‍💼 ADMIN — Review or Update Apology Status (Transactional)
+// 🧑‍💼 ADMIN — Review or Update Apology Status
 func ReviewApology(c *fiber.Ctx) error {
 	id := c.Params("id")
 
@@ -138,6 +143,10 @@ func ReviewApology(c *fiber.Ctx) error {
 	}
 
 	tx.Commit()
+
+	// ✅ Load Student details for the response
+	config.DB.Preload("Student.User").First(&apology, "id = ?", id)
+
 	return c.JSON(fiber.Map{
 		"message": "Apology reviewed successfully",
 		"data":    apology,

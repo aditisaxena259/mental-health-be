@@ -36,17 +36,17 @@ ADMINTOKEN=$(curl -s -X POST $BASE/login \
   -d '{"email": "admin@hostel.com", "password": "admin123"}' | jq -r '.token')
 echo "✅ Admin login successful"
 
-# 🧾 Complaint creation
-# echo -e "\n🧾 Creating Complaint..."
-# curl -s -X POST $BASE/student/complaints \
-#   -H "Authorization: Bearer $TOKEN" \
-#   -H "Content-Type: application/json" \
-#   -d '{
-#         "title": "Fan not working",
-#         "type": "electricity",
-#         "description": "Fan in my room stopped working"
-#       }' | jq .
-# echo "✅ Complaint created"
+#🧾 Complaint creation
+echo -e "\n🧾 Creating Complaint..."
+curl -s -X POST $BASE/student/complaints \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+        "title": "Fan not working",
+        "type": "electricity",
+        "description": "Fan in my room stopped working"
+      }' | jq .
+echo "✅ Complaint created"
 
 # 📋 Fetch All Complaints (Student)
 echo -e "\n📋 Fetching All Complaints (Student)..."

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"strings"
 	"time"
 
 	"github.com/aditisaxena259/mental-health-be/config"
@@ -21,6 +22,28 @@ func Signup(c *fiber.Ctx) error {
 
 	if data["name"] == "" || data["email"] == "" || data["password"] == "" || data["role"] == "" {
 		return c.Status(400).JSON(fiber.Map{"error": "Name, email, password, and role are required"})
+	}
+
+	// Require room and hostel/block depending on role
+	role := models.RoleType(data["role"])
+	email := data["email"]
+	if role == models.Admin || role == models.ChiefAdmin {
+		// admin must provide block
+		if data["block"] == "" {
+			return c.Status(400).JSON(fiber.Map{"error": "Hostel block is required for admin signups"})
+		}
+		// domain check
+		if !strings.HasSuffix(strings.ToLower(email), "@hostel.com") {
+			return c.Status(400).JSON(fiber.Map{"error": "Admin signup requires an @hostel.com email"})
+		}
+	} else if role == models.Student {
+		// student must provide hostel and room
+		if data["hostel"] == "" || data["room_no"] == "" {
+			return c.Status(400).JSON(fiber.Map{"error": "Hostel and room number are required for student signups"})
+		}
+		if !strings.HasSuffix(strings.ToLower(email), "@uni.com") {
+			return c.Status(400).JSON(fiber.Map{"error": "Student signup requires an @uni.com email"})
+		}
 	}
 
 	// ✅ Check if user already exists
@@ -46,6 +69,7 @@ func Signup(c *fiber.Ctx) error {
 		Email:    data["email"],
 		Password: string(hashedPassword),
 		Role:     models.RoleType(data["role"]),
+		Block:    data["block"],
 	}
 
 	// ✅ Save user to the database
@@ -54,20 +78,21 @@ func Signup(c *fiber.Ctx) error {
 	}
 
 	// 🆕 If role = "student", also create a StudentModel record
-	if user.Role == "student" {
+	if user.Role == models.Student {
 		student := models.StudentModel{
 			UserID: user.ID,
-			Hostel: "",
-			RoomNo: "",
+			Hostel: data["hostel"],
+			RoomNo: data["room_no"],
 		}
 		if err := config.DB.Create(&student).Error; err != nil {
 			return c.Status(500).JSON(fiber.Map{"error": "Failed to create student record"})
 		}
 	}
 
+	// For admins, ensure their block is persisted in User.Block - already set above
+
 	return c.JSON(fiber.Map{"message": "User created successfully"})
 }
-
 
 func Login(c *fiber.Ctx) error {
 	var data map[string]string
@@ -110,11 +135,10 @@ func Login(c *fiber.Ctx) error {
 	})
 }
 
-
 func Logout(c *fiber.Ctx) error {
-	
+
 	c.Cookie(&fiber.Cookie{
-		Name:     "token",  // Replace with your actual cookie name
+		Name:     "token", // Replace with your actual cookie name
 		Value:    "",
 		Expires:  time.Now().Add(-time.Hour), // Expire immediately
 		HTTPOnly: true,

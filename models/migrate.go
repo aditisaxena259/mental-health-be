@@ -9,7 +9,7 @@ func AutoMigrateAll() {
 		DO $$ BEGIN 
 			-- User roles
 			IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role') THEN 
-				CREATE TYPE user_role AS ENUM ('student', 'admin', 'counselor'); 
+				CREATE TYPE user_role AS ENUM ('student', 'admin', 'chief_admin', 'counselor'); 
 			END IF;
 
 			-- Complaint types
@@ -31,6 +31,7 @@ func AutoMigrateAll() {
 					'inprogress', 
 					'resolved'
 				); 
+			END IF;
 			-- Apology types
 			IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'apology_type') THEN 
 				CREATE TYPE apology_type AS ENUM (
@@ -56,6 +57,9 @@ func AutoMigrateAll() {
 	config.DB.Exec(`ALTER TYPE complaint_type ADD VALUE IF NOT EXISTS 'electricity';`)
 	config.DB.Exec(`ALTER TYPE complaint_type ADD VALUE IF NOT EXISTS 'Lost and Found';`)
 	config.DB.Exec(`ALTER TYPE complaint_type ADD VALUE IF NOT EXISTS 'Other Issues';`)
+
+	// Ensure user_role enum has chief_admin for existing DBs
+	config.DB.Exec(`ALTER TYPE user_role ADD VALUE IF NOT EXISTS 'chief_admin';`)
 
 	// --- Migrate all tables in dependency order ---
 	config.DB.AutoMigrate(

@@ -2,6 +2,11 @@ package controllers
 
 import (
 	"fmt"
+	"io"
+	"mime/multipart"
+	"net/http"
+	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/aditisaxena259/mental-health-be/config"
@@ -13,29 +18,118 @@ import (
 
 // 🧑‍🎓 STUDENT — Create Complaint
 func CreateComplaint(c *fiber.Ctx) error {
-	var complaint models.Complaint
+	// Expect multipart/form-data: fields for title, type, description; files[] for attachments
+	title := c.FormValue("title")
+	ctype := c.FormValue("type")
+	description := c.FormValue("description")
 
-	if err := c.BodyParser(&complaint); err != nil {
-		return c.Status(400).JSON(fiber.Map{"error": "Invalid input"})
+	if title == "" || ctype == "" || description == "" {
+		return c.Status(400).JSON(fiber.Map{"error": "title, type and description are required"})
 	}
 
-	// ✅ Extract user ID from JWT (set by middleware)
 	userID, ok := c.Locals("user_id").(string)
 	if !ok || userID == "" {
 		return c.Status(401).JSON(fiber.Map{"error": "Unauthorized: missing user ID"})
 	}
 
-	complaint.UserID = uuid.MustParse(userID)
-	complaint.Status = "open"
-
-	if err := config.DB.Create(&complaint).Error; err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"error":   "Failed to create complaint",
-			"details": err.Error(),
-		})
+	complaint := models.Complaint{
+		ID:          uuid.New(),
+		Title:       title,
+		Type:        models.ComplaintType(ctype),
+		Description: description,
+		UserID:      uuid.MustParse(userID),
+		Status:      models.Open,
 	}
 
-	return c.JSON(fiber.Map{"message": "Complaint submitted successfully"})
+	// Start transaction
+	tx := config.DB.Begin()
+	if err := tx.Create(&complaint).Error; err != nil {
+		tx.Rollback()
+		return c.Status(500).JSON(fiber.Map{"error": "Failed to create complaint", "details": err.Error()})
+	}
+
+	// Handle attachments (optional). Field name: "attachments" (multiple)
+	form, err := c.MultipartForm()
+	if err == nil && form != nil {
+		files := form.File["attachments"]
+		for _, fh := range files {
+			if fh == nil {
+				continue
+			}
+			if !isJPEG(fh) {
+				tx.Rollback()
+				return c.Status(400).JSON(fiber.Map{"error": "Only JPEG attachments are allowed"})
+			}
+			saved, saveErr := saveAttachmentFile(fh, complaint.ID)
+			if saveErr != nil {
+				tx.Rollback()
+				return c.Status(500).JSON(fiber.Map{"error": "Failed to save attachment", "details": saveErr.Error()})
+			}
+			att := models.Attachment{
+				ID:          uuid.New(),
+				ComplaintID: complaint.ID,
+				FileName:    fh.Filename,
+				FileURL:     saved.PublicURL,
+				Size:        fmt.Sprintf("%d", saved.Size),
+				FilePath:    saved.Path,
+			}
+			if err := tx.Create(&att).Error; err != nil {
+				tx.Rollback()
+				return c.Status(500).JSON(fiber.Map{"error": "Failed to create attachment record"})
+			}
+		}
+	}
+
+	tx.Commit()
+	return c.JSON(fiber.Map{"message": "Complaint submitted successfully", "id": complaint.ID})
+}
+
+type savedFileInfo struct {
+	Path      string
+	PublicURL string
+	Size      int64
+}
+
+func saveAttachmentFile(fh *multipart.FileHeader, complaintID uuid.UUID) (*savedFileInfo, error) {
+	// ensure directory
+	dir := "./uploads/attachments/" + complaintID.String()
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return nil, err
+	}
+	src, err := fh.Open()
+	if err != nil {
+		return nil, err
+	}
+	defer src.Close()
+
+	dstPath := filepath.Join(dir, fh.Filename)
+	dst, err := os.Create(dstPath)
+	if err != nil {
+		return nil, err
+	}
+	defer dst.Close()
+
+	written, err := io.Copy(dst, src)
+	if err != nil {
+		return nil, err
+	}
+
+	return &savedFileInfo{Path: dstPath, PublicURL: dstPath, Size: written}, nil
+}
+
+func isJPEG(fh *multipart.FileHeader) bool {
+	f, err := fh.Open()
+	if err != nil {
+		return false
+	}
+	defer f.Close()
+	buf := make([]byte, 512)
+	n, _ := f.Read(buf)
+	if n == 0 {
+		return false
+	}
+	ct := http.DetectContentType(buf[:n])
+	return ct == "image/jpeg" || ct == "image/jpg"
 }
 
 // 🧾 STUDENT + ADMIN — Get All Complaints
@@ -188,11 +282,13 @@ func GetComplaintbyID(c *fiber.Ctx) error {
 	return c.JSON(response)
 }
 
-
-//get all complaints by admin
+// get all complaints by admin
 // 🧑‍💼 ADMIN — Get All Complaints (with optional filters)
 func GetAllComplaintsAdmin(c *fiber.Ctx) error {
 	var complaints []models.Complaint
+
+	role, _ := c.Locals("role").(string)
+	userID, _ := c.Locals("user_id").(string)
 
 	query := config.DB.Preload("User").Preload("Student").Preload("Attachments").Preload("Timeline")
 
@@ -202,6 +298,18 @@ func GetAllComplaintsAdmin(c *fiber.Ctx) error {
 	}
 	if complaintType := c.Query("type"); complaintType != "" {
 		query = query.Where("type = ?", complaintType)
+	}
+
+	// If the requester is an admin (not chief_admin), restrict to their block
+	if role == string(models.Admin) && userID != "" {
+		// get requesting user's block
+		var reqUser models.User
+		if err := config.DB.First(&reqUser, "id = ?", userID).Error; err == nil {
+			if reqUser.Block != "" {
+				// complaints are associated to students who have Hostel field; filter by that
+				query = query.Joins("JOIN student_models ON student_models.user_id = complaints.user_id").Where("student_models.hostel = ?", reqUser.Block)
+			}
+		}
 	}
 
 	if err := query.Order("created_at desc").Find(&complaints).Error; err != nil {

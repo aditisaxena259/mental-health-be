@@ -35,7 +35,7 @@ func SetupRoutes(app *fiber.App) {
 	// -------------------------------
 	// ADMIN / WARDEN ROUTES
 	// -------------------------------
-	admin := protected.Group("/admin", middlewares.RequireRole("admin"))
+	admin := protected.Group("/admin", middlewares.RequireRole("admin", "chief_admin"))
 
 	// 🧾 Complaints
 	admin.Get("/complaints", controllers.GetAllComplaintsAdmin)
@@ -43,9 +43,9 @@ func SetupRoutes(app *fiber.App) {
 	admin.Delete("/complaints/:id", controllers.DeleteComplaint)
 
 	// ✉️ Apologies (admin/warden can see all student apologies)
-	admin.Get("/apologies", controllers.GetApologies)           // View all or filter
-	admin.Get("/apologies/:id", controllers.GetApologyByID)     // View specific apology
-	admin.Put("/apologies/:id/review", controllers.ReviewApology) // Review/accept/reject apology
+	admin.Get("/apologies", controllers.GetApologies)              // View all or filter
+	admin.Get("/apologies/:id", controllers.GetApologyByID)        // View specific apology
+	admin.Put("/apologies/:id/review", controllers.ReviewApology)  // Review/accept/reject apology
 	admin.Get("/apologies/pending", controllers.GetPendingApology) // Count pending apologies
 
 	// -------------------------------

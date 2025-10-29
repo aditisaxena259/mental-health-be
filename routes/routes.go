@@ -56,8 +56,35 @@ func SetupRoutes(app *fiber.App) {
 	protected.Get("/metrics/pending-count", controllers.GetPendingComplaint)
 
 	// -------------------------------
+	// Password reset (public)
+	// -------------------------------
+	api.Post("/forgot-password", controllers.ForgotPassword)
+	api.Post("/reset-password", controllers.ResetPassword)
+
+	// -------------------------------
 	// COMPLAINT TIMELINE (Shared)
 	// -------------------------------
 	protected.Post("/complaints/:id/timeline", controllers.AddTimelineEntry)
 	protected.Get("/complaints/:id/timeline", controllers.GetTimeline)
+
+	// -------------------------------
+	// Counseling / Slots
+	// -------------------------------
+	protected.Get("/counselors/:id/slots", controllers.ListCounselorSlots)
+	// create slot (admin/counselor)
+	protected.Post("/counselors/:id/slots", controllers.CreateCounselorSlot)
+	// Admin books a slot for a student
+	admin.Post("/counselors/:id/book", controllers.BookCounselorSlot)
+	// Counselor updates session notes/progress (only counselor role)
+	counselor := protected.Group("/counselor", middlewares.RequireRole("counselor"))
+	counselor.Post("/sessions/:id/update", controllers.CounselorUpdateSession)
+
+	// DEV helper to retrieve latest reset token (only when DEV_MODE=true)
+	api.Get("/dev/reset-token", controllers.DevGetResetToken)
+
+	// -------------------------------
+	// Profile routes
+	// -------------------------------
+	student.Get("/profile", controllers.GetOwnProfile)
+	admin.Get("/student/:student_identifier", controllers.GetStudentProfileAdmin)
 }

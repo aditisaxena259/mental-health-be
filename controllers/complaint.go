@@ -22,6 +22,7 @@ func CreateComplaint(c *fiber.Ctx) error {
 	title := c.FormValue("title")
 	ctype := c.FormValue("type")
 	description := c.FormValue("description")
+	priorityStr := c.FormValue("priority")
 
 	if title == "" || ctype == "" || description == "" {
 		return c.Status(400).JSON(fiber.Map{"error": "title, type and description are required"})
@@ -39,6 +40,17 @@ func CreateComplaint(c *fiber.Ctx) error {
 		Description: description,
 		UserID:      uuid.MustParse(userID),
 		Status:      models.Open,
+	}
+
+	// set priority if provided
+	if priorityStr != "" {
+		complaint.Priority = models.ComplaintPriority(priorityStr)
+	}
+
+	// set student identifier from student's StudentModel (external id)
+	var sm models.StudentModel
+	if err := config.DB.Where("user_id = ?", complaint.UserID).First(&sm).Error; err == nil {
+		complaint.StudentIdentifier = sm.StudentIdentifier
 	}
 
 	// Start transaction

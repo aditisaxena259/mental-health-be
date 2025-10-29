@@ -69,6 +69,8 @@ func AutoMigrateAll() {
 		&Attachment{},
 		&TimelineEntry{},
 		&Apology{}, // ✅ only this line added
+		&PasswordResetToken{},
+		&CounselorSlot{},
 	)
 
 	// --- Enforce correct column types ---
@@ -77,4 +79,31 @@ func AutoMigrateAll() {
 		ALTER COLUMN type TYPE complaint_type USING type::complaint_type,
 		ALTER COLUMN status TYPE status_type USING status::status_type;
 	`)
+
+	// --- Add missing columns that may not exist in older DBs ---
+	config.DB.Exec(`DO $$ BEGIN
+		IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='complaints' AND column_name='student_identifier') THEN
+			ALTER TABLE complaints ADD COLUMN student_identifier text;
+		END IF;
+		IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='apologies' AND column_name='student_identifier') THEN
+			ALTER TABLE apologies ADD COLUMN student_identifier text;
+		END IF;
+		-- Add priority column for complaints (text with default 'medium')
+		IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='complaints' AND column_name='priority') THEN
+			ALTER TABLE complaints ADD COLUMN priority text DEFAULT 'medium';
+		END IF;
+	END $$;`)
+
+	// --- Create password_reset_tokens table if not present (GORM sometimes misses creation in edge cases) ---
+	config.DB.Exec(`DO $$ BEGIN
+		IF NOT EXISTS (SELECT 1 FROM pg_tables WHERE schemaname = CURRENT_SCHEMA() AND tablename = 'password_reset_tokens') THEN
+			CREATE TABLE password_reset_tokens (
+				id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+				user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+				token text NOT NULL UNIQUE,
+				expires_at timestamptz,
+				created_at timestamptz DEFAULT now()
+			);
+		END IF;
+	END $$;`)
 }

@@ -79,10 +79,15 @@ func Signup(c *fiber.Ctx) error {
 
 	// 🆕 If role = "student", also create a StudentModel record
 	if user.Role == models.Student {
+		// student_id is required from student signup and will be used as StudentIdentifier
+		if data["student_id"] == "" {
+			return c.Status(400).JSON(fiber.Map{"error": "student_id is required for student signups"})
+		}
 		student := models.StudentModel{
-			UserID: user.ID,
-			Hostel: data["hostel"],
-			RoomNo: data["room_no"],
+			UserID:            user.ID,
+			StudentIdentifier: data["student_id"],
+			Hostel:            data["hostel"],
+			RoomNo:            data["room_no"],
 		}
 		if err := config.DB.Create(&student).Error; err != nil {
 			return c.Status(500).JSON(fiber.Map{"error": "Failed to create student record"})

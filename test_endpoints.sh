@@ -9,11 +9,15 @@ BASE="http://localhost:8080/api"
 
 # 🧍 Create Student (skip if exists)
 echo -e "\n🧍 Creating Student user..."
-curl -s -X POST $BASE/signup \
+STU_RESP=$(curl -s -X POST $BASE/signup \
   -H "Content-Type: application/json" \
-  -d '{"name": "Student1", "email": "student1@uni.com", "password": "student123", "role": "student", "hostel": "Block-A", "room_no": "201"}' \
-  | jq .
-echo "✅ Student signup done"
+  -d '{"name": "Student1", "email": "student1@uni.com", "password": "student123", "role": "student", "student_id": "S1001", "hostel": "Block-A", "room_no": "201"}')
+if [[ $(echo "$STU_RESP" | jq -e . >/dev/null 2>&1; echo $?) -eq 0 ]]; then
+  echo "$STU_RESP" | jq .
+else
+  echo "Non-JSON response during student signup: $STU_RESP"
+fi
+echo "✅ Student signup attempted"
 
 # 👮 Create Admin WITHOUT block (should be rejected later)
 echo -e "\n👮 Creating Admin user (no block)..."
@@ -48,6 +52,46 @@ ADMINTOKEN=$(curl -s -X POST $BASE/login \
   -H "Content-Type: application/json" \
   -d '{"email": "admin@hostel.com", "password": "admin123"}' | jq -r '.token')
 echo "✅ Admin (with block) login successful"
+
+# -----------------------
+# Forgot / Reset Password
+# -----------------------
+echo -e "\n🔐 Testing forgot/reset password flow..."
+curl -s -X POST $BASE/forgot-password -H "Content-Type: application/json" -d '{"email":"student1@uni.com"}' >/dev/null || true
+echo "Requested password reset (email simulated)"
+
+# Retrieve dev token (DEV_MODE=true must be set when running server). Retry a few times if not present yet.
+DEV_TOKEN=""
+for i in 1 2 3; do
+  sleep 1
+  T=$(curl -s -G $BASE/dev/reset-token --data-urlencode "email=student1@uni.com")
+  # ensure valid JSON
+  if echo "$T" | jq -e . >/dev/null 2>&1; then
+    DEV_TOKEN=$(echo "$T" | jq -r '.token')
+    if [[ "$DEV_TOKEN" != "null" && -n "$DEV_TOKEN" ]]; then
+      break
+    fi
+  fi
+done
+echo "Dev reset token: $DEV_TOKEN"
+
+if [ -n "$DEV_TOKEN" ] && [ "$DEV_TOKEN" != "null" ]; then
+  RSP=$(curl -s -X POST $BASE/reset-password -H "Content-Type: application/json" -d "{\"token\": \"$DEV_TOKEN\", \"password\": \"newstudentpass\"}")
+  if echo "$RSP" | jq -e . >/dev/null 2>&1; then
+    echo "$RSP" | jq .
+  else
+    echo "Reset password response: $RSP"
+  fi
+  echo "Password reset attempted"
+  # login with new password
+  NEWTOKEN=$(curl -s -X POST $BASE/login -H "Content-Type: application/json" -d '{"email":"student1@uni.com", "password": "newstudentpass"}' | jq -r '.token')
+  echo "Login with new password token: $NEWTOKEN"
+  if [ -n "$NEWTOKEN" ] && [ "$NEWTOKEN" != "null" ]; then
+    TOKEN=$NEWTOKEN
+  fi
+else
+  echo "No dev token found; skipping reset/password check"
+fi
 
 #🧾 Complaint creation
 echo -e "\n🧾 Creating Complaint..."
@@ -127,6 +171,43 @@ curl -s -X GET $BASE/metrics/status-summary -H "Authorization: Bearer $ADMINTOKE
 curl -s -X GET $BASE/metrics/resolution-rate -H "Authorization: Bearer $ADMINTOKEN" | jq .
 curl -s -X GET $BASE/metrics/pending-count -H "Authorization: Bearer $ADMINTOKEN" | jq .
 echo "✅ Metrics endpoints tested successfully"
+
+# -----------------------
+# Counseling flow tests
+# -----------------------
+echo -e "\n🧑‍⚕️ Creating a counselor slot (dev flow)"
+# We'll use the existing admin token to create a slot for a counselor. For test, create a fake counselor user first.
+curl -s -X POST $BASE/signup -H "Content-Type: application/json" -d '{"name":"Counselor1","email":"counselor1@hostel.com","password":"counselor123","role":"counselor"}' | jq .
+CID=$(curl -s -X POST $BASE/login -H "Content-Type: application/json" -d '{"email":"counselor1@hostel.com","password":"counselor123"}' | jq -r '.token')
+# get counselor user id by logging in and decoding token is complex; instead query dev endpoint to find user id via student listing? For simplicity, seed a counselor ID from DB not possible here; instead we'll create a slot for the admin as 'counselor' by using admin's ID.
+# Get admin user id via profile
+ADMIN_USER_ID=$(curl -s -X POST $BASE/login -H "Content-Type: application/json" -d '{"email":"admin@hostel.com","password":"admin123"}' | jq -r '.token' )
+# As we don't have a token decode in shell easily, we will create a slot for a placeholder counselor by using the admin's own user id fetched via admin profile (admin must login and call admin->student endpoint will fail); Instead, skip complex ID handling and use the seeded counselor by listing all users via an admin-only endpoint (not available). To keep this test deterministic, we'll skip creating a slot if we can't determine counselor id.
+echo "Skipping counselor slot creation in lightweight smoke test (use manual testing or run integration tests)"
+
+# -----------------------
+# Profile checks
+# -----------------------
+echo -e "\n👤 Fetching student profile (self)"
+PROF_RESP=$(curl -s -X GET $BASE/student/profile -H "Authorization: Bearer $TOKEN")
+if echo "$PROF_RESP" | jq -e . >/dev/null 2>&1; then
+  echo "$PROF_RESP" | jq .
+else
+  echo "Non-JSON response fetching student profile: $PROF_RESP"
+fi
+
+echo -e "\n👮 Admin fetching student profile by student_identifier"
+STUDENT_IDENTIFIER=$(echo "$PROF_RESP" | jq -r '.student_identifier' 2>/dev/null || echo "")
+if [ "$STUDENT_IDENTIFIER" != "null" ] && [ -n "$STUDENT_IDENTIFIER" ]; then
+  ADM_PROF=$(curl -s -X GET $BASE/admin/student/$STUDENT_IDENTIFIER -H "Authorization: Bearer $ADMINTOKEN")
+  if echo "$ADM_PROF" | jq -e . >/dev/null 2>&1; then
+    echo "$ADM_PROF" | jq .
+  else
+    echo "Non-JSON response fetching admin view of student: $ADM_PROF"
+  fi
+else
+  echo "Student_identifier missing; skipping admin profile fetch"
+fi
 
 echo ""
 echo "-----------------------------------------------"

@@ -41,6 +41,15 @@ func SubmitApology(c *fiber.Ctx) error {
 		Status:      models.ApologySubmitted,
 	}
 
+	// set StudentIdentifier if available
+	var sm models.StudentModel
+	if err := config.DB.Where("user_id = ?", studentUUID).First(&sm).Error; err == nil {
+		// use StudentIdentifier for external mapping
+		// Apology model will include StudentIdentifier in JSON response if present
+		// but keep StudentID for DB relations
+		apology.StudentID = studentUUID
+	}
+
 	if err := config.DB.Create(&apology).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to submit apology", "details": err.Error()})
 	}

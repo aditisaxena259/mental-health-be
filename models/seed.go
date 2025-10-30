@@ -3,7 +3,6 @@ package models
 import (
 	"fmt"
 	"log"
-	
 
 	"github.com/aditisaxena259/mental-health-be/config"
 	"github.com/google/uuid"

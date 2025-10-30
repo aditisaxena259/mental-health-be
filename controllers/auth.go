@@ -27,14 +27,19 @@ func Signup(c *fiber.Ctx) error {
 	// Require room and hostel/block depending on role
 	role := models.RoleType(data["role"])
 	email := data["email"]
-	if role == models.Admin || role == models.ChiefAdmin {
+	if role == models.Admin {
 		// admin must provide block
 		if data["block"] == "" {
 			return c.Status(400).JSON(fiber.Map{"error": "Hostel block is required for admin signups"})
 		}
-		// domain check
+		// admin domain check
 		if !strings.HasSuffix(strings.ToLower(email), "@hostel.com") {
 			return c.Status(400).JSON(fiber.Map{"error": "Admin signup requires an @hostel.com email"})
+		}
+	} else if role == models.ChiefAdmin {
+		// chief admin does NOT need a block, but still should use the hostel domain
+		if !strings.HasSuffix(strings.ToLower(email), "@hostel.com") {
+			return c.Status(400).JSON(fiber.Map{"error": "Chief admin signup requires an @hostel.com email"})
 		}
 	} else if role == models.Student {
 		// student must provide hostel and room

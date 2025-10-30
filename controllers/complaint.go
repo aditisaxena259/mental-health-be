@@ -60,6 +60,9 @@ func CreateComplaint(c *fiber.Ctx) error {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to create complaint", "details": err.Error()})
 	}
 
+	// NOTE: defer creating notifications until after the DB transaction commits
+	// to avoid creating notifications for complaints that later rollback (e.g. attachment failures).
+
 	// Handle attachments (optional). Field name: "attachments" (multiple)
 	form, err := c.MultipartForm()
 	if err == nil && form != nil {
@@ -93,6 +96,44 @@ func CreateComplaint(c *fiber.Ctx) error {
 	}
 
 	tx.Commit()
+	// spawn notification creator after commit
+	go func(comp models.Complaint) {
+		var sm models.StudentModel
+		if err := config.DB.Where("user_id = ?", comp.UserID).First(&sm).Error; err != nil {
+			return
+		}
+		hostel := sm.Hostel
+		var admins []models.User
+		if hostel != "" {
+			config.DB.Where("role = ? AND block = ?", models.Admin, hostel).Find(&admins)
+		}
+		var chiefs []models.User
+		config.DB.Where("role = ?", models.ChiefAdmin).Find(&chiefs)
+		// deduplicate by ID
+		m := map[string]models.User{}
+		for _, a := range admins {
+			m[a.ID.String()] = a
+		}
+		for _, c := range chiefs {
+			m[c.ID.String()] = c
+		}
+		admins = []models.User{}
+		for _, v := range m {
+			admins = append(admins, v)
+		}
+
+		for _, a := range admins {
+			n := models.Notification{
+				ID:      uuid.New(),
+				AdminID: a.ID,
+				Title:   "New Complaint Submitted",
+				Body:    "A student has submitted a complaint: " + comp.Title,
+				Link:    "/admin/complaints",
+			}
+			config.DB.Create(&n)
+		}
+	}(complaint)
+
 	return c.JSON(fiber.Map{"message": "Complaint submitted successfully", "id": complaint.ID})
 }
 

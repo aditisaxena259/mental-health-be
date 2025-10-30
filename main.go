@@ -23,9 +23,8 @@ func main() {
 	}
 	log.Println("✅ Connected to PostgreSQL!")
 
-	
 	models.AutoMigrateAll()
-    models.SeedData()
+	models.SeedData()
 	log.Println("📦 Database migrations completed successfully!")
 
 	// Initialize Fiber app

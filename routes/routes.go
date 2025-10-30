@@ -48,6 +48,10 @@ func SetupRoutes(app *fiber.App) {
 	admin.Put("/apologies/:id/review", controllers.ReviewApology)  // Review/accept/reject apology
 	admin.Get("/apologies/pending", controllers.GetPendingApology) // Count pending apologies
 
+	// 🔔 Notifications for admins
+	admin.Get("/notifications", controllers.GetNotifications)
+	admin.Post("/notifications/:id/read", controllers.MarkNotificationRead)
+
 	// -------------------------------
 	// METRICS (Shared for logged-in users)
 	// -------------------------------

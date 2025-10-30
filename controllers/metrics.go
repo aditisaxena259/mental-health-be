@@ -15,10 +15,10 @@ func GetStatus(c *fiber.Ctx) error {
 	config.DB.Model(&models.Complaint{}).Where("status = ?", "resolved").Count(&resolved)
 
 	return c.JSON(fiber.Map{
-		"open":        open,
-		"inprogress":  inprogress,
-		"resolved":    resolved,
-		"total":       open + inprogress + resolved,
+		"open":       open,
+		"inprogress": inprogress,
+		"resolved":   resolved,
+		"total":      open + inprogress + resolved,
 	})
 }
 

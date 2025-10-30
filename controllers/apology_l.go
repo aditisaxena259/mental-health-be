@@ -54,6 +54,44 @@ func SubmitApology(c *fiber.Ctx) error {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to submit apology", "details": err.Error()})
 	}
 
+	// create notifications for admins of the student's block + chief admins
+	go func(a models.Apology) {
+		var sm models.StudentModel
+		if err := config.DB.Where("user_id = ?", a.StudentID).First(&sm).Error; err != nil {
+			return
+		}
+		hostel := sm.Hostel
+		var admins []models.User
+		if hostel != "" {
+			config.DB.Where("role = ? AND block = ?", models.Admin, hostel).Find(&admins)
+		}
+		var chiefs []models.User
+		config.DB.Where("role = ?", models.ChiefAdmin).Find(&chiefs)
+		// deduplicate
+		m := map[string]models.User{}
+		for _, a := range admins {
+			m[a.ID.String()] = a
+		}
+		for _, c := range chiefs {
+			m[c.ID.String()] = c
+		}
+		admins = []models.User{}
+		for _, v := range m {
+			admins = append(admins, v)
+		}
+
+		for _, adm := range admins {
+			n := models.Notification{
+				ID:      uuid.New(),
+				AdminID: adm.ID,
+				Title:   "New Apology Submitted",
+				Body:    "A student has submitted an apology: " + a.Message,
+				Link:    "/admin/apologies",
+			}
+			config.DB.Create(&n)
+		}
+	}(apology)
+
 	// ✅ Preload after creation so response includes Student details
 	config.DB.Preload("Student.User").First(&apology, "id = ?", apology.ID)
 

@@ -46,8 +46,8 @@ func ConnectDatabase() error {
 	if err != nil {
 		return fmt.Errorf("❌ failed to get database instance: %w", err)
 	}
-	sqlDB.SetMaxOpenConns(10)             // Maximum open connections
-	sqlDB.SetMaxIdleConns(5)              // Keep a few idle
+	sqlDB.SetMaxOpenConns(10)               // Maximum open connections
+	sqlDB.SetMaxIdleConns(5)                // Keep a few idle
 	sqlDB.SetConnMaxLifetime(1 * time.Hour) // Recycle after 1 hour
 
 	DB = database

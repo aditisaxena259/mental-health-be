@@ -14,7 +14,7 @@ var DB *gorm.DB
 func ConnectToDB() {
 	var err error
 
-	dsn := os.Getenv("DATABASE_URL") 
+	dsn := os.Getenv("DATABASE_URL")
 	if dsn == "" {
 		log.Fatal("❌ DATABASE_URL environment variable is not set!")
 		return

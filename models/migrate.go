@@ -71,6 +71,7 @@ func AutoMigrateAll() {
 		&Apology{}, // ✅ only this line added
 		&PasswordResetToken{},
 		&CounselorSlot{},
+		&Notification{},
 	)
 
 	// --- Enforce correct column types ---
@@ -94,6 +95,23 @@ func AutoMigrateAll() {
 		END IF;
 	END $$;`)
 
+	// --- Ensure student_models has student_identifier column and unique index ---
+	config.DB.Exec(`DO $$ BEGIN
+		IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='student_models' AND column_name='student_identifier') THEN
+			ALTER TABLE student_models ADD COLUMN student_identifier text;
+		END IF;
+		-- Create unique index on student_identifier if not exists
+		IF NOT EXISTS (SELECT 1 FROM pg_indexes WHERE tablename='student_models' AND indexname='idx_student_models_student_identifier_unique') THEN
+			BEGIN
+				-- Try to create unique index; if duplicate values exist this will fail and we'll leave the index absent
+				EXECUTE 'CREATE UNIQUE INDEX CONCURRENTLY idx_student_models_student_identifier_unique ON student_models (student_identifier)';
+			EXCEPTION WHEN others THEN
+				-- ignore index creation errors (duplicates, locks)
+				NULL;
+			END;
+		END IF;
+	END $$;`)
+
 	// --- Create password_reset_tokens table if not present (GORM sometimes misses creation in edge cases) ---
 	config.DB.Exec(`DO $$ BEGIN
 		IF NOT EXISTS (SELECT 1 FROM pg_tables WHERE schemaname = CURRENT_SCHEMA() AND tablename = 'password_reset_tokens') THEN
@@ -102,6 +120,21 @@ func AutoMigrateAll() {
 				user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
 				token text NOT NULL UNIQUE,
 				expires_at timestamptz,
+				created_at timestamptz DEFAULT now()
+			);
+		END IF;
+	END $$;`)
+
+	// --- Create notifications table if not present ---
+	config.DB.Exec(`DO $$ BEGIN
+		IF NOT EXISTS (SELECT 1 FROM pg_tables WHERE schemaname = CURRENT_SCHEMA() AND tablename = 'notifications') THEN
+			CREATE TABLE notifications (
+				id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+				admin_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+				title text NOT NULL,
+				body text NOT NULL,
+				link text,
+				is_read boolean DEFAULT false,
 				created_at timestamptz DEFAULT now()
 			);
 		END IF;

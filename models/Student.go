@@ -10,6 +10,8 @@ type StudentModel struct {
 
 	// StudentIdentifier is the externally-provided student id (e.g. university roll number)
 	// This will be used to map complaints/apologies and other student-specific records.
+	// StudentIdentifier is stored in DB as `student_identifier` (snake_case by GORM).
+	// Keep the JSON field as `student_id` for API compatibility.
 	StudentIdentifier string `gorm:"type:text;uniqueIndex;not null" json:"student_id"`
 
 	Hostel string `gorm:"type:text" json:"hostel"`

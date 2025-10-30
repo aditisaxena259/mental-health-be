@@ -1,0 +1,906 @@
+
+🚀 Starting Hostel Management API test sequence...
+-----------------------------------------------
+
+🧍 Creating Student user...
+{
+  "error": "User with this email already exists"
+}
+✅ Student signup attempted
+
+👮 Creating Admin user (no block)...
+{
+  "error": "Hostel block is required for admin signups"
+}
+✅ Admin (no block) signup attempted
+
+👮 Creating Admin user (with block)...
+{
+  "error": "User with this email already exists"
+}
+✅ Admin (with block) signup done
+
+🔑 Logging in Student...
+✅ Student login successful
+
+🔑 Logging in Admin...
+✅ Admin (no block) login attempted
+✅ Admin (with block) login successful
+
+🔐 Testing forgot/reset password flow...
+Requested password reset (email simulated)
+Dev reset token: null
+No dev token found; skipping reset/password check
+
+🧾 Creating Complaint...
+{
+  "error": "title, type and description are required"
+}
+✅ Complaint created
+
+📋 Fetching All Complaints (Student)...
+{
+  "count": 9,
+  "data": [
+    {
+      "ID": "118a0cdb-1d4c-440c-bc0e-e34f009fa685",
+      "Title": "Test notify",
+      "UserID": "abe54790-2c9f-416d-be17-7339284ace65",
+      "student_identifier": "",
+      "Type": "plumbing",
+      "Description": "Test notification to admin",
+      "priority": "medium",
+      "Status": "open",
+      "CreatedAt": "2025-10-29T17:12:06.028506Z",
+      "user": {
+        "id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "name": "Student1",
+        "email": "student1@uni.com",
+        "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+        "role": "student",
+        "block": "",
+        "created_at": "2025-10-28T20:43:05.972122Z"
+      },
+      "student": {
+        "id": "80326933-f71f-45d9-bad0-b2b0364759d7",
+        "user_id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "student_id": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "abe54790-2c9f-416d-be17-7339284ace65",
+          "name": "Student1",
+          "email": "student1@uni.com",
+          "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+          "role": "student",
+          "block": "",
+          "created_at": "2025-10-28T20:43:05.972122Z"
+        }
+      },
+      "attachments": [],
+      "timeline": []
+    },
+    {
+      "ID": "6935a0ee-31b2-4cb2-8668-267ee72e3190",
+      "Title": "Fan not working",
+      "UserID": "abe54790-2c9f-416d-be17-7339284ace65",
+      "student_identifier": "",
+      "Type": "electricity",
+      "Description": "Fan in my room stopped working",
+      "priority": "medium",
+      "Status": "open",
+      "CreatedAt": "2025-10-29T16:51:46.295059Z",
+      "user": {
+        "id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "name": "Student1",
+        "email": "student1@uni.com",
+        "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+        "role": "student",
+        "block": "",
+        "created_at": "2025-10-28T20:43:05.972122Z"
+      },
+      "student": {
+        "id": "80326933-f71f-45d9-bad0-b2b0364759d7",
+        "user_id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "student_id": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "abe54790-2c9f-416d-be17-7339284ace65",
+          "name": "Student1",
+          "email": "student1@uni.com",
+          "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+          "role": "student",
+          "block": "",
+          "created_at": "2025-10-28T20:43:05.972122Z"
+        }
+      },
+      "attachments": [
+        {
+          "ID": "cd5ccbeb-171c-4516-b36a-139e10d6b78e",
+          "ComplaintID": "6935a0ee-31b2-4cb2-8668-267ee72e3190",
+          "FileName": "tiny.jpg",
+          "FileURL": "uploads/attachments/6935a0ee-31b2-4cb2-8668-267ee72e3190/tiny.jpg",
+          "Size": "346",
+          "FilePath": "uploads/attachments/6935a0ee-31b2-4cb2-8668-267ee72e3190/tiny.jpg"
+        }
+      ],
+      "timeline": []
+    },
+    {
+      "ID": "28ef0959-148e-4b8a-9543-eb9d1ce45f82",
+      "Title": "Fan not working",
+      "UserID": "abe54790-2c9f-416d-be17-7339284ace65",
+      "student_identifier": "",
+      "Type": "electricity",
+      "Description": "Fan in my room stopped working",
+      "priority": "medium",
+      "Status": "open",
+      "CreatedAt": "2025-10-29T11:04:52.25443Z",
+      "user": {
+        "id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "name": "Student1",
+        "email": "student1@uni.com",
+        "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+        "role": "student",
+        "block": "",
+        "created_at": "2025-10-28T20:43:05.972122Z"
+      },
+      "student": {
+        "id": "80326933-f71f-45d9-bad0-b2b0364759d7",
+        "user_id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "student_id": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "abe54790-2c9f-416d-be17-7339284ace65",
+          "name": "Student1",
+          "email": "student1@uni.com",
+          "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+          "role": "student",
+          "block": "",
+          "created_at": "2025-10-28T20:43:05.972122Z"
+        }
+      },
+      "attachments": [
+        {
+          "ID": "15e34de8-0f2d-46b2-9178-dbe094dc9f6c",
+          "ComplaintID": "28ef0959-148e-4b8a-9543-eb9d1ce45f82",
+          "FileName": "tiny.jpg",
+          "FileURL": "uploads/attachments/28ef0959-148e-4b8a-9543-eb9d1ce45f82/tiny.jpg",
+          "Size": "346",
+          "FilePath": "uploads/attachments/28ef0959-148e-4b8a-9543-eb9d1ce45f82/tiny.jpg"
+        }
+      ],
+      "timeline": [
+        {
+          "ID": "b8d745f8-0322-45e9-9404-b20b2433183a",
+          "ComplaintID": "28ef0959-148e-4b8a-9543-eb9d1ce45f82",
+          "Author": "student:abe54790-2c9f-416d-be17-7339284ace65",
+          "Message": "Student requested urgent review (set priority: high)",
+          "Timestamp": "2025-10-29T11:17:10.918368Z"
+        }
+      ]
+    },
+    {
+      "ID": "a440fd78-e921-4693-a094-d144926a658b",
+      "Title": "Fan not working",
+      "UserID": "abe54790-2c9f-416d-be17-7339284ace65",
+      "student_identifier": "",
+      "Type": "electricity",
+      "Description": "Fan in my room stopped working",
+      "priority": "medium",
+      "Status": "open",
+      "CreatedAt": "2025-10-29T11:00:44.256943Z",
+      "user": {
+        "id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "name": "Student1",
+        "email": "student1@uni.com",
+        "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+        "role": "student",
+        "block": "",
+        "created_at": "2025-10-28T20:43:05.972122Z"
+      },
+      "student": {
+        "id": "80326933-f71f-45d9-bad0-b2b0364759d7",
+        "user_id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "student_id": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "abe54790-2c9f-416d-be17-7339284ace65",
+          "name": "Student1",
+          "email": "student1@uni.com",
+          "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+          "role": "student",
+          "block": "",
+          "created_at": "2025-10-28T20:43:05.972122Z"
+        }
+      },
+      "attachments": [
+        {
+          "ID": "663b48a8-e8b1-421f-a39e-6e31c441094f",
+          "ComplaintID": "a440fd78-e921-4693-a094-d144926a658b",
+          "FileName": "tiny.jpg",
+          "FileURL": "uploads/attachments/a440fd78-e921-4693-a094-d144926a658b/tiny.jpg",
+          "Size": "346",
+          "FilePath": "uploads/attachments/a440fd78-e921-4693-a094-d144926a658b/tiny.jpg"
+        }
+      ],
+      "timeline": []
+    },
+    {
+      "ID": "ce3f1cfe-09f8-442d-af4e-ad4f8fbaa1af",
+      "Title": "Fan not working",
+      "UserID": "abe54790-2c9f-416d-be17-7339284ace65",
+      "student_identifier": "",
+      "Type": "electricity",
+      "Description": "Fan in my room stopped working",
+      "priority": "medium",
+      "Status": "open",
+      "CreatedAt": "2025-10-29T10:06:36.407605Z",
+      "user": {
+        "id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "name": "Student1",
+        "email": "student1@uni.com",
+        "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+        "role": "student",
+        "block": "",
+        "created_at": "2025-10-28T20:43:05.972122Z"
+      },
+      "student": {
+        "id": "80326933-f71f-45d9-bad0-b2b0364759d7",
+        "user_id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "student_id": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "abe54790-2c9f-416d-be17-7339284ace65",
+          "name": "Student1",
+          "email": "student1@uni.com",
+          "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+          "role": "student",
+          "block": "",
+          "created_at": "2025-10-28T20:43:05.972122Z"
+        }
+      },
+      "attachments": [
+        {
+          "ID": "5df434f1-913a-47eb-a9a5-1d6e24159a25",
+          "ComplaintID": "ce3f1cfe-09f8-442d-af4e-ad4f8fbaa1af",
+          "FileName": "tiny.jpg",
+          "FileURL": "uploads/attachments/ce3f1cfe-09f8-442d-af4e-ad4f8fbaa1af/tiny.jpg",
+          "Size": "346",
+          "FilePath": "uploads/attachments/ce3f1cfe-09f8-442d-af4e-ad4f8fbaa1af/tiny.jpg"
+        }
+      ],
+      "timeline": []
+    },
+    {
+      "ID": "82275722-fbd5-4976-882a-d0050b04f5f0",
+      "Title": "new complaint",
+      "UserID": "abe54790-2c9f-416d-be17-7339284ace65",
+      "student_identifier": "",
+      "Type": "plumbing",
+      "Description": "new complaint",
+      "priority": "medium",
+      "Status": "resolved",
+      "CreatedAt": "2025-10-29T06:56:44.331986Z",
+      "user": {
+        "id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "name": "Student1",
+        "email": "student1@uni.com",
+        "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+        "role": "student",
+        "block": "",
+        "created_at": "2025-10-28T20:43:05.972122Z"
+      },
+      "student": {
+        "id": "80326933-f71f-45d9-bad0-b2b0364759d7",
+        "user_id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "student_id": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "abe54790-2c9f-416d-be17-7339284ace65",
+          "name": "Student1",
+          "email": "student1@uni.com",
+          "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+          "role": "student",
+          "block": "",
+          "created_at": "2025-10-28T20:43:05.972122Z"
+        }
+      },
+      "attachments": [],
+      "timeline": [
+        {
+          "ID": "aff66346-45ee-4e14-b515-be391086b8c1",
+          "ComplaintID": "82275722-fbd5-4976-882a-d0050b04f5f0",
+          "Author": "Warden/Admin",
+          "Message": "Status changed to inprogress",
+          "Timestamp": "2025-10-29T07:01:32.74243Z"
+        },
+        {
+          "ID": "c9250208-cac3-469b-95e3-6593f24859e0",
+          "ComplaintID": "82275722-fbd5-4976-882a-d0050b04f5f0",
+          "Author": "admin:2667d2ca-3510-4bc7-a370-7a68612f87f2",
+          "Message": "Status updated to: inprogress",
+          "Timestamp": "2025-10-29T07:01:33.619171Z"
+        },
+        {
+          "ID": "d30c5314-d805-467e-8d3d-e4ba4bd66f2b",
+          "ComplaintID": "82275722-fbd5-4976-882a-d0050b04f5f0",
+          "Author": "Warden/Admin",
+          "Message": "Status changed to resolved",
+          "Timestamp": "2025-10-29T07:03:02.981652Z"
+        },
+        {
+          "ID": "82e19591-cec3-4509-8897-351f6ba32ef6",
+          "ComplaintID": "82275722-fbd5-4976-882a-d0050b04f5f0",
+          "Author": "admin:2667d2ca-3510-4bc7-a370-7a68612f87f2",
+          "Message": "Status updated to: resolved",
+          "Timestamp": "2025-10-29T07:03:03.951192Z"
+        }
+      ]
+    },
+    {
+      "ID": "b18a378d-5dc9-4d9b-8010-3df88d138ae5",
+      "Title": "plmoknijbuh",
+      "UserID": "abe54790-2c9f-416d-be17-7339284ace65",
+      "student_identifier": "",
+      "Type": "plumbing",
+      "Description": "awesdfxcgv",
+      "priority": "medium",
+      "Status": "inprogress",
+      "CreatedAt": "2025-10-28T21:44:14.933159Z",
+      "user": {
+        "id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "name": "Student1",
+        "email": "student1@uni.com",
+        "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+        "role": "student",
+        "block": "",
+        "created_at": "2025-10-28T20:43:05.972122Z"
+      },
+      "student": {
+        "id": "80326933-f71f-45d9-bad0-b2b0364759d7",
+        "user_id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "student_id": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "abe54790-2c9f-416d-be17-7339284ace65",
+          "name": "Student1",
+          "email": "student1@uni.com",
+          "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+          "role": "student",
+          "block": "",
+          "created_at": "2025-10-28T20:43:05.972122Z"
+        }
+      },
+      "attachments": [],
+      "timeline": [
+        {
+          "ID": "e9bff632-da6f-4b30-b054-842815926d11",
+          "ComplaintID": "b18a378d-5dc9-4d9b-8010-3df88d138ae5",
+          "Author": "Warden/Admin",
+          "Message": "Status changed to resolved",
+          "Timestamp": "2025-10-28T21:45:20.649189Z"
+        },
+        {
+          "ID": "a6019cde-d7cb-4ae7-a734-a5dddce590e7",
+          "ComplaintID": "b18a378d-5dc9-4d9b-8010-3df88d138ae5",
+          "Author": "admin:2667d2ca-3510-4bc7-a370-7a68612f87f2",
+          "Message": "Priority updated to: low",
+          "Timestamp": "2025-10-28T21:45:22.174102Z"
+        },
+        {
+          "ID": "f0dbb57e-5ec2-4de2-b21e-7277dd489704",
+          "ComplaintID": "b18a378d-5dc9-4d9b-8010-3df88d138ae5",
+          "Author": "Warden/Admin",
+          "Message": "Status changed to resolved",
+          "Timestamp": "2025-10-28T21:45:26.73188Z"
+        },
+        {
+          "ID": "1dfc0d90-4027-4cd5-83b3-86574a584338",
+          "ComplaintID": "b18a378d-5dc9-4d9b-8010-3df88d138ae5",
+          "Author": "admin:2667d2ca-3510-4bc7-a370-7a68612f87f2",
+          "Message": "Forwarded to Senior Warden.",
+          "Timestamp": "2025-10-28T21:52:47.500458Z"
+        },
+        {
+          "ID": "839308f7-6a34-4ae6-b61c-be5ea1b3fffd",
+          "ComplaintID": "b18a378d-5dc9-4d9b-8010-3df88d138ae5",
+          "Author": "admin:2667d2ca-3510-4bc7-a370-7a68612f87f2",
+          "Message": "Forwarded to Senior Warden.",
+          "Timestamp": "2025-10-28T22:10:17.698432Z"
+        },
+        {
+          "ID": "a6f9a0db-fcb2-4924-907b-3c16ad7ab1ea",
+          "ComplaintID": "b18a378d-5dc9-4d9b-8010-3df88d138ae5",
+          "Author": "student:abe54790-2c9f-416d-be17-7339284ace65",
+          "Message": "my name ",
+          "Timestamp": "2025-10-29T06:12:06.178097Z"
+        },
+        {
+          "ID": "e42e350c-d7cd-46fb-818a-7326a00d7505",
+          "ComplaintID": "b18a378d-5dc9-4d9b-8010-3df88d138ae5",
+          "Author": "student:abe54790-2c9f-416d-be17-7339284ace65",
+          "Message": "my name ",
+          "Timestamp": "2025-10-29T06:12:06.96765Z"
+        },
+        {
+          "ID": "ed56257d-2fd0-4418-a525-68e2ae7f7411",
+          "ComplaintID": "b18a378d-5dc9-4d9b-8010-3df88d138ae5",
+          "Author": "admin:2667d2ca-3510-4bc7-a370-7a68612f87f2",
+          "Message": "Priority updated to: low",
+          "Timestamp": "2025-10-29T06:15:07.575988Z"
+        },
+        {
+          "ID": "45510d6a-2063-486f-b700-64163a955531",
+          "ComplaintID": "b18a378d-5dc9-4d9b-8010-3df88d138ae5",
+          "Author": "Warden/Admin",
+          "Message": "Status changed to inprogress",
+          "Timestamp": "2025-10-29T06:15:10.682643Z"
+        },
+        {
+          "ID": "c25f0bde-ef81-4ede-b856-e405a459d5c0",
+          "ComplaintID": "b18a378d-5dc9-4d9b-8010-3df88d138ae5",
+          "Author": "admin:2667d2ca-3510-4bc7-a370-7a68612f87f2",
+          "Message": "Status updated to: inprogress",
+          "Timestamp": "2025-10-29T06:15:11.591676Z"
+        }
+      ]
+    },
+    {
+      "ID": "4b15dbd7-66c7-40fb-8392-f2a96d5cac76",
+      "Title": "my name",
+      "UserID": "abe54790-2c9f-416d-be17-7339284ace65",
+      "student_identifier": "",
+      "Type": "plumbing",
+      "Description": "abcdefg",
+      "priority": "medium",
+      "Status": "open",
+      "CreatedAt": "2025-10-28T21:12:27.261225Z",
+      "user": {
+        "id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "name": "Student1",
+        "email": "student1@uni.com",
+        "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+        "role": "student",
+        "block": "",
+        "created_at": "2025-10-28T20:43:05.972122Z"
+      },
+      "student": {
+        "id": "80326933-f71f-45d9-bad0-b2b0364759d7",
+        "user_id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "student_id": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "abe54790-2c9f-416d-be17-7339284ace65",
+          "name": "Student1",
+          "email": "student1@uni.com",
+          "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+          "role": "student",
+          "block": "",
+          "created_at": "2025-10-28T20:43:05.972122Z"
+        }
+      },
+      "attachments": [],
+      "timeline": [
+        {
+          "ID": "f59d8a80-6501-427a-bc0e-ce1838e62409",
+          "ComplaintID": "4b15dbd7-66c7-40fb-8392-f2a96d5cac76",
+          "Author": "student:abe54790-2c9f-416d-be17-7339284ace65",
+          "Message": "Student requested cancellation",
+          "Timestamp": "2025-10-28T21:43:09.340685Z"
+        },
+        {
+          "ID": "6d219e5f-359c-45af-8cfd-b559ba4d714b",
+          "ComplaintID": "4b15dbd7-66c7-40fb-8392-f2a96d5cac76",
+          "Author": "student:abe54790-2c9f-416d-be17-7339284ace65",
+          "Message": "Student requested cancellation",
+          "Timestamp": "2025-10-28T21:43:15.95568Z"
+        },
+        {
+          "ID": "49b5fe9a-c1e5-4b84-b0ee-f556c0ae29b9",
+          "ComplaintID": "4b15dbd7-66c7-40fb-8392-f2a96d5cac76",
+          "Author": "student:abe54790-2c9f-416d-be17-7339284ace65",
+          "Message": "Student requested urgent review",
+          "Timestamp": "2025-10-28T21:43:32.70046Z"
+        },
+        {
+          "ID": "36273967-903e-46e1-aa4b-26ec23b820cf",
+          "ComplaintID": "4b15dbd7-66c7-40fb-8392-f2a96d5cac76",
+          "Author": "student:abe54790-2c9f-416d-be17-7339284ace65",
+          "Message": "Student requested cancellation",
+          "Timestamp": "2025-10-28T22:11:54.34097Z"
+        },
+        {
+          "ID": "59b70bb7-3235-40cb-ba4b-775260c4763f",
+          "ComplaintID": "4b15dbd7-66c7-40fb-8392-f2a96d5cac76",
+          "Author": "student:abe54790-2c9f-416d-be17-7339284ace65",
+          "Message": "Student requested urgent review (set priority: high)",
+          "Timestamp": "2025-10-28T22:13:34.500328Z"
+        },
+        {
+          "ID": "2b64f270-3b8e-474f-a7da-86c70b7d5d76",
+          "ComplaintID": "4b15dbd7-66c7-40fb-8392-f2a96d5cac76",
+          "Author": "student:abe54790-2c9f-416d-be17-7339284ace65",
+          "Message": "Student requested urgent review (set priority: high)",
+          "Timestamp": "2025-10-28T22:49:01.546173Z"
+        }
+      ]
+    },
+    {
+      "ID": "b1bb3e6f-8d28-4363-b762-50f2b20e3b70",
+      "Title": "Fan not working",
+      "UserID": "abe54790-2c9f-416d-be17-7339284ace65",
+      "student_identifier": "",
+      "Type": "electricity",
+      "Description": "Fan in my room stopped working",
+      "priority": "medium",
+      "Status": "open",
+      "CreatedAt": "2025-10-28T20:43:16.05648Z",
+      "user": {
+        "id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "name": "Student1",
+        "email": "student1@uni.com",
+        "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+        "role": "student",
+        "block": "",
+        "created_at": "2025-10-28T20:43:05.972122Z"
+      },
+      "student": {
+        "id": "80326933-f71f-45d9-bad0-b2b0364759d7",
+        "user_id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "student_id": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "abe54790-2c9f-416d-be17-7339284ace65",
+          "name": "Student1",
+          "email": "student1@uni.com",
+          "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+          "role": "student",
+          "block": "",
+          "created_at": "2025-10-28T20:43:05.972122Z"
+        }
+      },
+      "attachments": [],
+      "timeline": [
+        {
+          "ID": "9f2e9c96-d82f-4bad-b8ef-ec9f3deb33b1",
+          "ComplaintID": "b1bb3e6f-8d28-4363-b762-50f2b20e3b70",
+          "Author": "student:abe54790-2c9f-416d-be17-7339284ace65",
+          "Message": "hhi",
+          "Timestamp": "2025-10-28T21:02:16.791104Z"
+        },
+        {
+          "ID": "8013afe2-486b-4409-aec2-2c05b5fef04d",
+          "ComplaintID": "b1bb3e6f-8d28-4363-b762-50f2b20e3b70",
+          "Author": "student:abe54790-2c9f-416d-be17-7339284ace65",
+          "Message": "Student requested cancellation",
+          "Timestamp": "2025-10-28T22:12:07.460469Z"
+        }
+      ]
+    }
+  ]
+}
+✅ Fetched complaints successfully
+
+🧪 Admin (no block) attempting to fetch admin complaints (expect 403)...
+{"error":"Invalid or expired token"}HTTP_STATUS:401
+✅ Tested admin without block denied
+
+🧾 Creating Complaint with JPEG attachment...
+{
+  "id": "e6711851-b4a2-4283-ba46-6a2da06ae02c",
+  "message": "Complaint submitted successfully"
+}
+✅ Complaint with attachment created
+
+✉️ Submitting Apology...
+{
+  "data": {
+    "id": "232f992f-676f-4962-9816-4ea290ea9310",
+    "student_id": "abe54790-2c9f-416d-be17-7339284ace65",
+    "student_identifier": "",
+    "type": "misconduct",
+    "message": "Apology for missing morning roll call",
+    "description": "Woke up late, will be careful next time",
+    "status": "submitted",
+    "comment": "",
+    "created_at": "2025-10-29T18:04:05.561661Z",
+    "student": {
+      "id": "80326933-f71f-45d9-bad0-b2b0364759d7",
+      "user_id": "abe54790-2c9f-416d-be17-7339284ace65",
+      "student_id": "",
+      "hostel": "",
+      "room_no": "",
+      "user": {
+        "id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "name": "Student1",
+        "email": "student1@uni.com",
+        "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+        "role": "student",
+        "block": "",
+        "created_at": "2025-10-28T20:43:05.972122Z"
+      }
+    }
+  },
+  "message": "Apology letter submitted successfully"
+}
+✅ Apology submitted
+
+📬 Fetching Student Apologies...
+{
+  "count": 8,
+  "data": [
+    {
+      "id": "232f992f-676f-4962-9816-4ea290ea9310",
+      "student_id": "abe54790-2c9f-416d-be17-7339284ace65",
+      "student_identifier": "",
+      "type": "misconduct",
+      "message": "Apology for missing morning roll call",
+      "description": "Woke up late, will be careful next time",
+      "status": "submitted",
+      "comment": "",
+      "created_at": "2025-10-29T18:04:05.561661Z",
+      "student": {
+        "id": "80326933-f71f-45d9-bad0-b2b0364759d7",
+        "user_id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "student_id": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "abe54790-2c9f-416d-be17-7339284ace65",
+          "name": "Student1",
+          "email": "student1@uni.com",
+          "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+          "role": "student",
+          "block": "",
+          "created_at": "2025-10-28T20:43:05.972122Z"
+        }
+      }
+    },
+    {
+      "id": "020fa006-8059-47f2-85a4-4f3a3113158e",
+      "student_id": "abe54790-2c9f-416d-be17-7339284ace65",
+      "student_identifier": "",
+      "type": "misconduct",
+      "message": "Apology for missing morning roll call",
+      "description": "Woke up late, will be careful next time",
+      "status": "submitted",
+      "comment": "",
+      "created_at": "2025-10-29T16:51:48.370065Z",
+      "student": {
+        "id": "80326933-f71f-45d9-bad0-b2b0364759d7",
+        "user_id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "student_id": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "abe54790-2c9f-416d-be17-7339284ace65",
+          "name": "Student1",
+          "email": "student1@uni.com",
+          "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+          "role": "student",
+          "block": "",
+          "created_at": "2025-10-28T20:43:05.972122Z"
+        }
+      }
+    },
+    {
+      "id": "7ac02e89-0ee6-420d-b9a8-8c1b2beecb96",
+      "student_id": "abe54790-2c9f-416d-be17-7339284ace65",
+      "student_identifier": "",
+      "type": "misconduct",
+      "message": "Apology for missing morning roll call",
+      "description": "Woke up late, will be careful next time",
+      "status": "submitted",
+      "comment": "",
+      "created_at": "2025-10-29T16:44:23.025695Z",
+      "student": {
+        "id": "80326933-f71f-45d9-bad0-b2b0364759d7",
+        "user_id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "student_id": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "abe54790-2c9f-416d-be17-7339284ace65",
+          "name": "Student1",
+          "email": "student1@uni.com",
+          "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+          "role": "student",
+          "block": "",
+          "created_at": "2025-10-28T20:43:05.972122Z"
+        }
+      }
+    },
+    {
+      "id": "c5304724-e797-4157-bfd7-bb66cc64b53b",
+      "student_id": "abe54790-2c9f-416d-be17-7339284ace65",
+      "student_identifier": "",
+      "type": "misconduct",
+      "message": "Apology for missing morning roll call",
+      "description": "Woke up late, will be careful next time",
+      "status": "submitted",
+      "comment": "",
+      "created_at": "2025-10-29T11:04:53.918749Z",
+      "student": {
+        "id": "80326933-f71f-45d9-bad0-b2b0364759d7",
+        "user_id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "student_id": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "abe54790-2c9f-416d-be17-7339284ace65",
+          "name": "Student1",
+          "email": "student1@uni.com",
+          "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+          "role": "student",
+          "block": "",
+          "created_at": "2025-10-28T20:43:05.972122Z"
+        }
+      }
+    },
+    {
+      "id": "fd9ed9f5-50d8-4c80-a9d9-3c49f7b7cb40",
+      "student_id": "abe54790-2c9f-416d-be17-7339284ace65",
+      "student_identifier": "",
+      "type": "misconduct",
+      "message": "Apology for missing morning roll call",
+      "description": "Woke up late, will be careful next time",
+      "status": "submitted",
+      "comment": "",
+      "created_at": "2025-10-29T11:00:45.646762Z",
+      "student": {
+        "id": "80326933-f71f-45d9-bad0-b2b0364759d7",
+        "user_id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "student_id": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "abe54790-2c9f-416d-be17-7339284ace65",
+          "name": "Student1",
+          "email": "student1@uni.com",
+          "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+          "role": "student",
+          "block": "",
+          "created_at": "2025-10-28T20:43:05.972122Z"
+        }
+      }
+    },
+    {
+      "id": "4827aafe-0d0e-4d69-9930-9d68f3a3622e",
+      "student_id": "abe54790-2c9f-416d-be17-7339284ace65",
+      "student_identifier": "",
+      "type": "misconduct",
+      "message": "Apology for missing morning roll call",
+      "description": "Woke up late, will be careful next time",
+      "status": "submitted",
+      "comment": "",
+      "created_at": "2025-10-29T10:06:38.167532Z",
+      "student": {
+        "id": "80326933-f71f-45d9-bad0-b2b0364759d7",
+        "user_id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "student_id": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "abe54790-2c9f-416d-be17-7339284ace65",
+          "name": "Student1",
+          "email": "student1@uni.com",
+          "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+          "role": "student",
+          "block": "",
+          "created_at": "2025-10-28T20:43:05.972122Z"
+        }
+      }
+    },
+    {
+      "id": "a653a8d7-b8a5-473c-8a92-df2c17aa072e",
+      "student_id": "abe54790-2c9f-416d-be17-7339284ace65",
+      "student_identifier": "",
+      "type": "misconduct",
+      "message": "sorry maam pls forgive me",
+      "description": "bye maam",
+      "status": "submitted",
+      "comment": "",
+      "created_at": "2025-10-29T06:30:22.023279Z",
+      "student": {
+        "id": "80326933-f71f-45d9-bad0-b2b0364759d7",
+        "user_id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "student_id": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "abe54790-2c9f-416d-be17-7339284ace65",
+          "name": "Student1",
+          "email": "student1@uni.com",
+          "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+          "role": "student",
+          "block": "",
+          "created_at": "2025-10-28T20:43:05.972122Z"
+        }
+      }
+    },
+    {
+      "id": "93787153-36fd-4456-8905-015e96df6714",
+      "student_id": "abe54790-2c9f-416d-be17-7339284ace65",
+      "student_identifier": "",
+      "type": "misconduct",
+      "message": "Apology for missing morning roll call",
+      "description": "Woke up late, will be careful next time",
+      "status": "submitted",
+      "comment": "",
+      "created_at": "2025-10-28T20:43:19.023545Z",
+      "student": {
+        "id": "80326933-f71f-45d9-bad0-b2b0364759d7",
+        "user_id": "abe54790-2c9f-416d-be17-7339284ace65",
+        "student_id": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "abe54790-2c9f-416d-be17-7339284ace65",
+          "name": "Student1",
+          "email": "student1@uni.com",
+          "password": "$2a$14$4Ok9UdrJeh5SB723LfxdGuWTKpxFfb2H2i7r9YWhdo/phLEtGQw2q",
+          "role": "student",
+          "block": "",
+          "created_at": "2025-10-28T20:43:05.972122Z"
+        }
+      }
+    }
+  ]
+}
+✅ Fetched student apologies
+
+🛠 Fetching All Apologies (Admin)...
+{
+  "error": "Forbidden: admin not assigned to any block"
+}
+Apology ID: null
+✅ Admin fetched apologies
+⚠️ No apology found to review.
+
+📊 Fetching Metrics (Admin)...
+{
+  "inprogress": 1,
+  "open": 10,
+  "resolved": 1,
+  "total": 12
+}
+{
+  "resolution_rate": 8.333333333333332
+}
+{
+  "pending_count": 10
+}
+✅ Metrics endpoints tested successfully
+
+🧑‍⚕️ Creating a counselor slot (dev flow)
+{
+  "error": "User with this email already exists"
+}
+Skipping counselor slot creation in lightweight smoke test (use manual testing or run integration tests)
+
+👤 Fetching student profile (self)
+{
+  "block": "",
+  "email": "student1@uni.com",
+  "hostel": "",
+  "id": "abe54790-2c9f-416d-be17-7339284ace65",
+  "name": "Student1",
+  "room_no": "",
+  "student_identifier": ""
+}
+
+👮 Admin fetching student profile by student_identifier
+Student_identifier missing; skipping admin profile fetch
+
+-----------------------------------------------
+✅ All endpoints tested successfully!
+

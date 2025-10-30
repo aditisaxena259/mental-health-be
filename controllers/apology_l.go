@@ -79,14 +79,17 @@ func SubmitApology(c *fiber.Ctx) error {
 		for _, v := range m {
 			admins = append(admins, v)
 		}
-
+		related := a.ID
+		rtype := "apology"
 		for _, adm := range admins {
 			n := models.Notification{
-				ID:      uuid.New(),
-				AdminID: adm.ID,
-				Title:   "New Apology Submitted",
-				Body:    "A student has submitted an apology: " + a.Message,
-				Link:    "/admin/apologies",
+				ID:          uuid.New(),
+				UserID:      adm.ID,
+				Title:       "New Apology Submitted",
+				Message:     "A student has submitted an apology: " + a.Message,
+				Type:        "info",
+				RelatedID:   &related,
+				RelatedType: &rtype,
 			}
 			config.DB.Create(&n)
 		}
@@ -193,6 +196,42 @@ func ReviewApology(c *fiber.Ctx) error {
 
 	// ✅ Load Student details for the response
 	config.DB.Preload("Student.User").First(&apology, "id = ?", id)
+
+	// Notify student about apology status change (reviewed/accepted/rejected)
+	go func(a models.Apology, status models.ApologyStatus) {
+		var title, message, ntype string
+		switch status {
+		case models.ApologySubmitted:
+			return
+		case models.ApologyReviewed:
+			title = "Apology Under Review"
+			message = "Your apology letter is being reviewed by the warden."
+			ntype = "info"
+		case models.ApologyAccepted:
+			title = "Apology Accepted"
+			message = "Your apology has been accepted."
+			ntype = "success"
+		case models.ApologyRejected:
+			title = "Apology Rejected"
+			message = "Your apology has been rejected. Please contact the warden for details."
+			ntype = "warning"
+		default:
+			return
+		}
+
+		related := a.ID
+		rtype := "apology"
+		n := models.Notification{
+			ID:          uuid.New(),
+			UserID:      a.StudentID,
+			Title:       title,
+			Message:     message,
+			Type:        ntype,
+			RelatedID:   &related,
+			RelatedType: &rtype,
+		}
+		config.DB.Create(&n)
+	}(apology, input.Status)
 
 	return c.JSON(fiber.Map{
 		"message": "Apology reviewed successfully",

@@ -125,18 +125,53 @@ func AutoMigrateAll() {
 		END IF;
 	END $$;`)
 
-	// --- Create notifications table if not present ---
+	// --- Create or migrate notifications table to new schema ---
 	config.DB.Exec(`DO $$ BEGIN
+		-- If notifications table doesn't exist, create with the new schema
 		IF NOT EXISTS (SELECT 1 FROM pg_tables WHERE schemaname = CURRENT_SCHEMA() AND tablename = 'notifications') THEN
 			CREATE TABLE notifications (
 				id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-				admin_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+				user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
 				title text NOT NULL,
-				body text NOT NULL,
-				link text,
+				message text NOT NULL,
+				type text DEFAULT 'info',
+				related_id uuid,
+				related_type text,
 				is_read boolean DEFAULT false,
-				created_at timestamptz DEFAULT now()
+				created_at timestamptz DEFAULT now(),
+				updated_at timestamptz DEFAULT now()
 			);
+		ELSE
+			-- Table exists: ensure new columns exist and migrate legacy columns
+			-- Add user_id if missing and copy from admin_id when present
+			IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='user_id') THEN
+				ALTER TABLE notifications ADD COLUMN user_id uuid;
+				IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='admin_id') THEN
+					UPDATE notifications SET user_id = admin_id WHERE user_id IS NULL;
+				END IF;
+			END IF;
+
+			-- Add message column and copy from body if body exists
+			IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='message') THEN
+				ALTER TABLE notifications ADD COLUMN message text;
+				IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='body') THEN
+					UPDATE notifications SET message = body WHERE message IS NULL;
+				END IF;
+			END IF;
+
+			-- Add type, related_id, related_type, updated_at if missing
+			IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='type') THEN
+				ALTER TABLE notifications ADD COLUMN type text DEFAULT 'info';
+			END IF;
+			IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='related_id') THEN
+				ALTER TABLE notifications ADD COLUMN related_id uuid;
+			END IF;
+			IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='related_type') THEN
+				ALTER TABLE notifications ADD COLUMN related_type text;
+			END IF;
+			IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='updated_at') THEN
+				ALTER TABLE notifications ADD COLUMN updated_at timestamptz DEFAULT now();
+			END IF;
 		END IF;
 	END $$;`)
 }

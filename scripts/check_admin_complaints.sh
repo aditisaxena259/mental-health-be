@@ -132,4 +132,3 @@ curl -s -X GET "$BASE/api/admin/complaints" \
 
 echo "\nDone."
 chmod +x scripts/check_admin_complaints.sh
-./scripts/check_admin_complaints.sh

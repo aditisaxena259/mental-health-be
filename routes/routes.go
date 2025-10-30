@@ -51,6 +51,14 @@ func SetupRoutes(app *fiber.App) {
 	// 🔔 Notifications for admins
 	admin.Get("/notifications", controllers.GetNotifications)
 	admin.Post("/notifications/:id/read", controllers.MarkNotificationRead)
+	// DEV: list all notifications for troubleshooting (only active when DEV_MODE=true)
+	admin.Get("/notifications/debug", controllers.DebugAllNotifications)
+
+	// Generic notification endpoints (for students and admins)
+	protected.Get("/notifications", controllers.GetNotifications)
+	protected.Patch("/notifications/:id/read", controllers.MarkNotificationRead)
+	protected.Patch("/notifications/read-all", controllers.MarkAllNotificationsRead)
+	protected.Delete("/notifications/:id", controllers.DeleteNotification)
 
 	// -------------------------------
 	// METRICS (Shared for logged-in users)

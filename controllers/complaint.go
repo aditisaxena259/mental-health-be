@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/aditisaxena259/mental-health-be/config"
@@ -96,7 +97,7 @@ func CreateComplaint(c *fiber.Ctx) error {
 	}
 
 	tx.Commit()
-	// spawn notification creator after commit
+	// spawn notification creator after commit — notify admins (block wardens + chiefs)
 	go func(comp models.Complaint) {
 		var sm models.StudentModel
 		if err := config.DB.Where("user_id = ?", comp.UserID).First(&sm).Error; err != nil {
@@ -122,13 +123,17 @@ func CreateComplaint(c *fiber.Ctx) error {
 			admins = append(admins, v)
 		}
 
+		related := comp.ID
+		rtype := "complaint"
 		for _, a := range admins {
 			n := models.Notification{
-				ID:      uuid.New(),
-				AdminID: a.ID,
-				Title:   "New Complaint Submitted",
-				Body:    "A student has submitted a complaint: " + comp.Title,
-				Link:    "/admin/complaints",
+				ID:          uuid.New(),
+				UserID:      a.ID,
+				Title:       "New Complaint Submitted",
+				Message:     "A student has submitted a complaint: " + comp.Title,
+				Type:        "info",
+				RelatedID:   &related,
+				RelatedType: &rtype,
 			}
 			config.DB.Create(&n)
 		}
@@ -258,15 +263,114 @@ func UpdateComplaintStatus(c *fiber.Ctx) error {
 	tx.Create(&timeline)
 	tx.Commit()
 
-	return c.JSON(fiber.Map{"message": "Status updated"})
+	// Create student notification synchronously and return it in response to avoid race in tests
+	// Determine notification content
+	var title, message, ntype string
+	switch input.Status {
+	case "inprogress":
+		title = "Complaint In Progress"
+		message = "Your complaint is now being reviewed by the warden."
+		ntype = "info"
+	case "resolved":
+		title = "Complaint Resolved"
+		message = "Your complaint has been resolved. Please check for updates."
+		ntype = "success"
+	default:
+		// other statuses: don't notify
+		return c.JSON(fiber.Map{"message": "Status updated"})
+	}
+
+	related := complaint.ID
+	rtype := "complaint"
+	n := models.Notification{
+		ID:          uuid.New(),
+		UserID:      complaint.UserID,
+		Title:       title,
+		Message:     message,
+		Type:        ntype,
+		RelatedID:   &related,
+		RelatedType: &rtype,
+	}
+
+	if err := config.DB.Create(&n).Error; err != nil {
+		// Log and still return success to admin, but report notification failure
+		return c.Status(500).JSON(fiber.Map{"error": "Status updated but failed to create notification", "details": err.Error()})
+	}
+
+	return c.JSON(fiber.Map{"message": "Status updated", "notification": n})
 }
 
 // 🧑‍💼 ADMIN — Delete Complaint
 func DeleteComplaint(c *fiber.Ctx) error {
 	id := c.Params("id")
-	if err := config.DB.Delete(&models.Complaint{}, id).Error; err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": "Failed to delete complaint"})
+
+	// Validate UUID format early to avoid DB errors
+	compUUID, err := uuid.Parse(id)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{"error": "Invalid complaint id"})
 	}
+
+	// Load complaint with related entities (for cleanup and existence check)
+	var complaint models.Complaint
+	if err := config.DB.Preload("Attachments").Preload("Timeline").Preload("Student").First(&complaint, "id = ?", compUUID).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return c.Status(404).JSON(fiber.Map{"error": "Complaint not found"})
+		}
+		return c.Status(500).JSON(fiber.Map{"error": "Failed to load complaint", "details": err.Error()})
+	}
+
+	// Authorization: Only chief admins can delete any complaint. Block admins can only delete
+	// complaints belonging to students in their assigned block.
+	role, _ := c.Locals("role").(string)
+	requesterID, _ := c.Locals("user_id").(string)
+	if role == string(models.Admin) {
+		var adminUser models.User
+		if requesterID == "" || config.DB.First(&adminUser, "id = ?", requesterID).Error != nil {
+			return c.Status(403).JSON(fiber.Map{"error": "Forbidden: cannot validate admin"})
+		}
+		adminBlock := adminUser.Block
+		studentBlock := complaint.Student.Hostel
+		if strings.TrimSpace(adminBlock) == "" || strings.TrimSpace(studentBlock) == "" || adminBlock != studentBlock {
+			return c.Status(403).JSON(fiber.Map{"error": "Forbidden: admin not authorized to delete this complaint"})
+		}
+	}
+
+	tx := config.DB.Begin()
+	// 1) Delete child records explicitly to satisfy FK constraints
+	if err := tx.Where("complaint_id = ?", compUUID).Delete(&models.Attachment{}).Error; err != nil {
+		tx.Rollback()
+		return c.Status(500).JSON(fiber.Map{"error": "Failed to delete attachments", "details": err.Error()})
+	}
+	if err := tx.Where("complaint_id = ?", compUUID).Delete(&models.TimelineEntry{}).Error; err != nil {
+		tx.Rollback()
+		return c.Status(500).JSON(fiber.Map{"error": "Failed to delete timeline entries", "details": err.Error()})
+	}
+	// Notifications are not FK-constrained, but clean them up if they reference this complaint
+	rtype := "complaint"
+	if err := tx.Where("related_id = ? AND related_type = ?", compUUID, rtype).Delete(&models.Notification{}).Error; err != nil {
+		tx.Rollback()
+		return c.Status(500).JSON(fiber.Map{"error": "Failed to delete related notifications", "details": err.Error()})
+	}
+
+	// 2) Delete the complaint itself
+	if err := tx.Where("id = ?", compUUID).Delete(&models.Complaint{}).Error; err != nil {
+		tx.Rollback()
+		return c.Status(500).JSON(fiber.Map{"error": "Failed to delete complaint", "details": err.Error()})
+	}
+
+	// 3) Commit DB changes before attempting filesystem cleanup
+	if err := tx.Commit().Error; err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": "Failed to commit deletion", "details": err.Error()})
+	}
+
+	// 4) Best-effort: remove attachments directory from disk
+	// Directory pattern: ./uploads/attachments/<complaintID>
+	attachDir := filepath.Join("./uploads/attachments", compUUID.String())
+	if stat, statErr := os.Stat(attachDir); statErr == nil && stat.IsDir() {
+		// Remove all files under this complaint's dir
+		_ = os.RemoveAll(attachDir)
+	}
+
 	return c.JSON(fiber.Map{"message": "Complaint deleted successfully"})
 }
 

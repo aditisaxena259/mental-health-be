@@ -173,6 +173,26 @@ curl -s -X GET $BASE/metrics/pending-count -H "Authorization: Bearer $ADMINTOKEN
 echo "✅ Metrics endpoints tested successfully"
 
 # -----------------------
+# Admin delete complaint
+# -----------------------
+echo -e "\n🗑️  Admin deleting a complaint..."
+DEL_ID=$(curl -s -X GET $BASE/admin/complaints \
+  -H "Authorization: Bearer $ADMINTOKEN" | jq -r '.data[0].ID // .data[0].id')
+if [ -n "$DEL_ID" ] && [ "$DEL_ID" != "null" ]; then
+  echo "Attempting to delete complaint: $DEL_ID"
+  DEL_RESP=$(curl -s -X DELETE $BASE/admin/complaints/$DEL_ID \
+    -H "Authorization: Bearer $ADMINTOKEN")
+  if echo "$DEL_RESP" | jq -e . >/dev/null 2>&1; then
+    echo "$DEL_RESP" | jq .
+  else
+    echo "Delete response: $DEL_RESP"
+  fi
+  echo "✅ Delete attempted"
+else
+  echo "⚠️  No complaint found to delete"
+fi
+
+# -----------------------
 # Counseling flow tests
 # -----------------------
 echo -e "\n🧑‍⚕️ Creating a counselor slot (dev flow)"

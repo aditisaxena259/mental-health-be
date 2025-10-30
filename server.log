@@ -1,14 +1,14 @@
-2025/10/30 12:52:44 ✅ Connected to Supabase PostgreSQL (simple protocol enabled)!
+2025/10/30 17:19:52 ✅ Connected to Supabase PostgreSQL (simple protocol enabled)!
 
-2025/10/30 12:52:45 [32m/Users/aditisaxena/mental-health-be/config/database.go:37 [33mSLOW SQL >= 200ms
-[0m[31;1m[504.622ms] [33m[rows:0][35m CREATE EXTENSION IF NOT EXISTS "uuid-ossp";[0m
+2025/10/30 17:19:53 [32m/Users/aditisaxena/mental-health-be/config/database.go:37 [33mSLOW SQL >= 200ms
+[0m[31;1m[1576.750ms] [33m[rows:0][35m CREATE EXTENSION IF NOT EXISTS "uuid-ossp";[0m
 
-2025/10/30 12:52:45 [32m/Users/aditisaxena/mental-health-be/config/database.go:40 [33mSLOW SQL >= 200ms
-[0m[31;1m[252.339ms] [33m[rows:0][35m CREATE EXTENSION IF NOT EXISTS "pgcrypto";[0m
-2025/10/30 12:52:45 ✅ Connected to PostgreSQL!
+2025/10/30 17:19:56 [32m/Users/aditisaxena/mental-health-be/config/database.go:40 [33mSLOW SQL >= 200ms
+[0m[31;1m[3076.167ms] [33m[rows:0][35m CREATE EXTENSION IF NOT EXISTS "pgcrypto";[0m
+2025/10/30 17:19:56 ✅ Connected to PostgreSQL!
 
-2025/10/30 12:52:45 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:8 [33mSLOW SQL >= 200ms
-[0m[31;1m[272.413ms] [33m[rows:0][35m 
+2025/10/30 17:19:59 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:8 [33mSLOW SQL >= 200ms
+[0m[31;1m[3095.397ms] [33m[rows:0][35m 
 		DO $$ BEGIN 
 			-- User roles
 			IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role') THEN 
@@ -56,104 +56,104 @@
 		END $$;
 	[0m
 
-2025/10/30 12:52:45 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:57 [33mSLOW SQL >= 200ms
-[0m[31;1m[252.071ms] [33m[rows:0][35m ALTER TYPE complaint_type ADD VALUE IF NOT EXISTS 'electricity';[0m
+2025/10/30 17:20:02 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:57 [33mSLOW SQL >= 200ms
+[0m[31;1m[2671.075ms] [33m[rows:0][35m ALTER TYPE complaint_type ADD VALUE IF NOT EXISTS 'electricity';[0m
 
-2025/10/30 12:52:46 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:58 [33mSLOW SQL >= 200ms
-[0m[31;1m[252.849ms] [33m[rows:0][35m ALTER TYPE complaint_type ADD VALUE IF NOT EXISTS 'Lost and Found';[0m
+2025/10/30 17:20:13 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:58 [33mSLOW SQL >= 200ms
+[0m[31;1m[11441.811ms] [33m[rows:0][35m ALTER TYPE complaint_type ADD VALUE IF NOT EXISTS 'Lost and Found';[0m
 
-2025/10/30 12:52:46 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:59 [33mSLOW SQL >= 200ms
-[0m[31;1m[251.374ms] [33m[rows:0][35m ALTER TYPE complaint_type ADD VALUE IF NOT EXISTS 'Other Issues';[0m
+2025/10/30 17:20:14 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:59 [33mSLOW SQL >= 200ms
+[0m[31;1m[819.571ms] [33m[rows:0][35m ALTER TYPE complaint_type ADD VALUE IF NOT EXISTS 'Other Issues';[0m
 
-2025/10/30 12:52:46 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:62 [33mSLOW SQL >= 200ms
-[0m[31;1m[251.707ms] [33m[rows:0][35m ALTER TYPE user_role ADD VALUE IF NOT EXISTS 'chief_admin';[0m
+2025/10/30 17:20:15 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:62 [33mSLOW SQL >= 200ms
+[0m[31;1m[613.633ms] [33m[rows:0][35m ALTER TYPE user_role ADD VALUE IF NOT EXISTS 'chief_admin';[0m
 
-2025/10/30 12:52:47 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
-[0m[31;1m[318.169ms] [33m[rows:1][35m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND table_type = 'BASE TABLE'[0m
+2025/10/30 17:20:15 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
+[0m[31;1m[441.127ms] [33m[rows:1][35m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND table_type = 'BASE TABLE'[0m
 
-2025/10/30 12:52:47 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
-[0m[31;1m[254.186ms] [33m[rows:1][35m SELECT CURRENT_DATABASE()[0m
+2025/10/30 17:20:16 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
+[0m[31;1m[314.273ms] [33m[rows:1][35m SELECT CURRENT_DATABASE()[0m
 
-2025/10/30 12:52:47 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
-[0m[31;1m[314.236ms] [33m[rows:-][35m SELECT c.column_name, c.is_nullable = 'YES', c.udt_name, c.character_maximum_length, c.numeric_precision, c.numeric_precision_radix, c.numeric_scale, c.datetime_precision, 8 * typlen, c.column_default, pd.description, c.identity_increment FROM information_schema.columns AS c JOIN pg_type AS pgt ON c.udt_name = pgt.typname LEFT JOIN pg_catalog.pg_description as pd ON pd.objsubid = c.ordinal_position AND pd.objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = c.table_name AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = c.table_schema)) where table_catalog = 'neondb' AND table_schema = CURRENT_SCHEMA() AND table_name = 'users'[0m
+2025/10/30 17:20:18 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
+[0m[31;1m[2470.274ms] [33m[rows:-][35m SELECT c.column_name, c.is_nullable = 'YES', c.udt_name, c.character_maximum_length, c.numeric_precision, c.numeric_precision_radix, c.numeric_scale, c.datetime_precision, 8 * typlen, c.column_default, pd.description, c.identity_increment FROM information_schema.columns AS c JOIN pg_type AS pgt ON c.udt_name = pgt.typname LEFT JOIN pg_catalog.pg_description as pd ON pd.objsubid = c.ordinal_position AND pd.objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = c.table_name AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = c.table_schema)) where table_catalog = 'neondb' AND table_schema = CURRENT_SCHEMA() AND table_name = 'users'[0m
 
-2025/10/30 12:52:47 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
-[0m[31;1m[252.443ms] [33m[rows:-][35m SELECT * FROM "users" LIMIT 5[0m
+2025/10/30 17:20:20 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
+[0m[31;1m[1209.595ms] [33m[rows:-][35m SELECT * FROM "users" LIMIT 5[0m
 
-2025/10/30 12:52:48 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
-[0m[31;1m[276.260ms] [33m[rows:-][35m SELECT constraint_name FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'neondb' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'users' AND constraint_type = 'UNIQUE'[0m
+2025/10/30 17:20:21 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
+[0m[31;1m[1452.891ms] [33m[rows:-][35m SELECT constraint_name FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'neondb' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'users' AND constraint_type = 'UNIQUE'[0m
 
-2025/10/30 12:52:48 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
-[0m[31;1m[718.284ms] [33m[rows:-][35m SELECT c.column_name, constraint_name, constraint_type FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'neondb' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'users'[0m
+2025/10/30 17:20:24 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
+[0m[31;1m[2327.795ms] [33m[rows:-][35m SELECT c.column_name, constraint_name, constraint_type FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'neondb' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'users'[0m
 
-2025/10/30 12:52:49 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
-[0m[31;1m[253.483ms] [33m[rows:-][35m SELECT a.attname as column_name, format_type(a.atttypid, a.atttypmod) AS data_type
+2025/10/30 17:20:27 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
+[0m[31;1m[3479.517ms] [33m[rows:-][35m SELECT a.attname as column_name, format_type(a.atttypid, a.atttypmod) AS data_type
 		FROM pg_attribute a JOIN pg_class b ON a.attrelid = b.oid AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA())
 		WHERE a.attnum > 0 -- hide internal columns
 		AND NOT a.attisdropped -- hide deleted columns
 		AND b.relname = 'users'[0m
 
-2025/10/30 12:52:49 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
-[0m[31;1m[253.864ms] [33m[rows:0][35m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))[0m
+2025/10/30 17:20:30 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
+[0m[31;1m[2613.128ms] [33m[rows:0][35m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))[0m
 
-2025/10/30 12:52:49 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
-[0m[31;1m[253.215ms] [33m[rows:0][35m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'name') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))[0m
+2025/10/30 17:20:34 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
+[0m[31;1m[4205.399ms] [33m[rows:0][35m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'name') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))[0m
 
-2025/10/30 12:52:49 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
-[0m[31;1m[253.685ms] [33m[rows:0][35m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'email') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))[0m
+2025/10/30 17:20:41 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
+[0m[31;1m[6856.210ms] [33m[rows:0][35m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'email') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))[0m
 
-2025/10/30 12:52:50 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
-[0m[31;1m[253.470ms] [33m[rows:0][35m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'password') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))[0m
+2025/10/30 17:20:43 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
+[0m[31;1m[2218.068ms] [33m[rows:0][35m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'password') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))[0m
 
-2025/10/30 12:52:50 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
-[0m[31;1m[252.762ms] [33m[rows:0][35m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'role') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))[0m
+2025/10/30 17:20:52 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
+[0m[31;1m[8905.903ms] [33m[rows:0][35m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'role') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))[0m
 
-2025/10/30 12:52:50 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
-[0m[31;1m[253.455ms] [33m[rows:0][35m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'block') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))[0m
+2025/10/30 17:20:53 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
+[0m[31;1m[944.583ms] [33m[rows:0][35m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'block') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))[0m
 
-2025/10/30 12:52:50 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
-[0m[31;1m[264.617ms] [33m[rows:0][35m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'created_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))[0m
+2025/10/30 17:20:53 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
+[0m[31;1m[299.317ms] [33m[rows:0][35m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'created_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))[0m
 
-2025/10/30 12:52:51 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
-[0m[31;1m[256.140ms] [33m[rows:1][35m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'student_models' AND table_type = 'BASE TABLE'[0m
+2025/10/30 17:20:54 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
+[0m[31;1m[566.557ms] [33m[rows:1][35m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'student_models' AND table_type = 'BASE TABLE'[0m
 
-2025/10/30 12:52:51 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
-[0m[31;1m[251.899ms] [33m[rows:1][35m SELECT CURRENT_DATABASE()[0m
+2025/10/30 17:20:54 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
+[0m[31;1m[519.549ms] [33m[rows:1][35m SELECT CURRENT_DATABASE()[0m
 
-2025/10/30 12:52:52 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
-[0m[31;1m[965.160ms] [33m[rows:-][35m SELECT c.column_name, c.is_nullable = 'YES', c.udt_name, c.character_maximum_length, c.numeric_precision, c.numeric_precision_radix, c.numeric_scale, c.datetime_precision, 8 * typlen, c.column_default, pd.description, c.identity_increment FROM information_schema.columns AS c JOIN pg_type AS pgt ON c.udt_name = pgt.typname LEFT JOIN pg_catalog.pg_description as pd ON pd.objsubid = c.ordinal_position AND pd.objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = c.table_name AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = c.table_schema)) where table_catalog = 'neondb' AND table_schema = CURRENT_SCHEMA() AND table_name = 'student_models'[0m
+2025/10/30 17:20:55 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
+[0m[31;1m[324.344ms] [33m[rows:-][35m SELECT c.column_name, c.is_nullable = 'YES', c.udt_name, c.character_maximum_length, c.numeric_precision, c.numeric_precision_radix, c.numeric_scale, c.datetime_precision, 8 * typlen, c.column_default, pd.description, c.identity_increment FROM information_schema.columns AS c JOIN pg_type AS pgt ON c.udt_name = pgt.typname LEFT JOIN pg_catalog.pg_description as pd ON pd.objsubid = c.ordinal_position AND pd.objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = c.table_name AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = c.table_schema)) where table_catalog = 'neondb' AND table_schema = CURRENT_SCHEMA() AND table_name = 'student_models'[0m
 
-2025/10/30 12:52:52 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
-[0m[31;1m[257.720ms] [33m[rows:-][35m SELECT * FROM "student_models" LIMIT 5[0m
+2025/10/30 17:20:55 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
+[0m[31;1m[354.636ms] [33m[rows:-][35m SELECT * FROM "student_models" LIMIT 5[0m
 
-2025/10/30 12:52:52 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
-[0m[31;1m[257.214ms] [33m[rows:-][35m SELECT constraint_name FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'neondb' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'student_models' AND constraint_type = 'UNIQUE'[0m
+2025/10/30 17:20:55 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
+[0m[31;1m[370.092ms] [33m[rows:-][35m SELECT constraint_name FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'neondb' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'student_models' AND constraint_type = 'UNIQUE'[0m
 
-2025/10/30 12:52:53 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
-[0m[31;1m[256.649ms] [33m[rows:-][35m SELECT c.column_name, constraint_name, constraint_type FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'neondb' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'student_models'[0m
+2025/10/30 17:20:56 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
+[0m[31;1m[314.129ms] [33m[rows:-][35m SELECT c.column_name, constraint_name, constraint_type FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'neondb' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'student_models'[0m
 
-2025/10/30 12:52:53 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
-[0m[31;1m[252.105ms] [33m[rows:-][35m SELECT a.attname as column_name, format_type(a.atttypid, a.atttypmod) AS data_type
+2025/10/30 17:20:56 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
+[0m[31;1m[350.654ms] [33m[rows:-][35m SELECT a.attname as column_name, format_type(a.atttypid, a.atttypmod) AS data_type
 		FROM pg_attribute a JOIN pg_class b ON a.attrelid = b.oid AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA())
 		WHERE a.attnum > 0 -- hide internal columns
 		AND NOT a.attisdropped -- hide deleted columns
 		AND b.relname = 'student_models'[0m
 
-2025/10/30 12:52:53 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
-[0m[31;1m[254.545ms] [33m[rows:0][35m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'student_models' AND column_name = 'id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'student_models' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))[0m
+2025/10/30 17:20:56 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:65 [33mSLOW SQL >= 200ms
+[0m[31;1m[318.127ms] [33m[rows:0][35m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'student_models' AND column_name = 'id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'student_models' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))[0m
 
-2025/10/30 12:52:53 [31;1m [35;1mERROR: constraint "uni_student_models_user_id" of relation "student_models" does not exist (SQLSTATE 42704)
-[0m[33m[251.912ms] [34;1m[rows:0][0m ALTER TABLE "student_models" DROP CONSTRAINT "uni_student_models_user_id"
+2025/10/30 17:20:57 [31;1m [35;1mERROR: constraint "uni_student_models_user_id" of relation "student_models" does not exist (SQLSTATE 42704)
+[0m[33m[299.681ms] [34;1m[rows:0][0m ALTER TABLE "student_models" DROP CONSTRAINT "uni_student_models_user_id"
 
-2025/10/30 12:52:54 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:78 [33mSLOW SQL >= 200ms
-[0m[31;1m[265.935ms] [33m[rows:0][35m 
+2025/10/30 17:20:57 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:78 [33mSLOW SQL >= 200ms
+[0m[31;1m[461.800ms] [33m[rows:0][35m 
 		ALTER TABLE complaints 
 		ALTER COLUMN type TYPE complaint_type USING type::complaint_type,
 		ALTER COLUMN status TYPE status_type USING status::status_type;
 	[0m
 
-2025/10/30 12:52:54 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:85 [33mSLOW SQL >= 200ms
-[0m[31;1m[297.023ms] [33m[rows:0][35m DO $$ BEGIN
+2025/10/30 17:20:57 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:85 [33mSLOW SQL >= 200ms
+[0m[31;1m[372.010ms] [33m[rows:0][35m DO $$ BEGIN
 		IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='complaints' AND column_name='student_identifier') THEN
 			ALTER TABLE complaints ADD COLUMN student_identifier text;
 		END IF;
@@ -166,8 +166,8 @@
 		END IF;
 	END $$;[0m
 
-2025/10/30 12:52:54 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:99 [33mSLOW SQL >= 200ms
-[0m[31;1m[260.403ms] [33m[rows:0][35m DO $$ BEGIN
+2025/10/30 17:20:58 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:99 [33mSLOW SQL >= 200ms
+[0m[31;1m[350.990ms] [33m[rows:0][35m DO $$ BEGIN
 		IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='student_models' AND column_name='student_identifier') THEN
 			ALTER TABLE student_models ADD COLUMN student_identifier text;
 		END IF;
@@ -183,8 +183,8 @@
 		END IF;
 	END $$;[0m
 
-2025/10/30 12:52:54 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:116 [33mSLOW SQL >= 200ms
-[0m[31;1m[254.589ms] [33m[rows:0][35m DO $$ BEGIN
+2025/10/30 17:20:58 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:116 [33mSLOW SQL >= 200ms
+[0m[31;1m[355.899ms] [33m[rows:0][35m DO $$ BEGIN
 		IF NOT EXISTS (SELECT 1 FROM pg_tables WHERE schemaname = CURRENT_SCHEMA() AND tablename = 'password_reset_tokens') THEN
 			CREATE TABLE password_reset_tokens (
 				id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -196,210 +196,122 @@
 		END IF;
 	END $$;[0m
 
-2025/10/30 12:52:55 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:129 [33mSLOW SQL >= 200ms
-[0m[31;1m[252.536ms] [33m[rows:0][35m DO $$ BEGIN
+2025/10/30 17:20:58 [32m/Users/aditisaxena/mental-health-be/models/migrate.go:129 [33mSLOW SQL >= 200ms
+[0m[31;1m[385.837ms] [33m[rows:0][35m DO $$ BEGIN
+		-- If notifications table doesn't exist, create with the new schema
 		IF NOT EXISTS (SELECT 1 FROM pg_tables WHERE schemaname = CURRENT_SCHEMA() AND tablename = 'notifications') THEN
 			CREATE TABLE notifications (
 				id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-				admin_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+				user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
 				title text NOT NULL,
-				body text NOT NULL,
-				link text,
+				message text NOT NULL,
+				type text DEFAULT 'info',
+				related_id uuid,
+				related_type text,
 				is_read boolean DEFAULT false,
-				created_at timestamptz DEFAULT now()
+				created_at timestamptz DEFAULT now(),
+				updated_at timestamptz DEFAULT now()
 			);
+		ELSE
+			-- Table exists: ensure new columns exist and migrate legacy columns
+			-- Add user_id if missing and copy from admin_id when present
+			IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='user_id') THEN
+				ALTER TABLE notifications ADD COLUMN user_id uuid;
+				IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='admin_id') THEN
+					UPDATE notifications SET user_id = admin_id WHERE user_id IS NULL;
+				END IF;
+			END IF;
+
+			-- Add message column and copy from body if body exists
+			IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='message') THEN
+				ALTER TABLE notifications ADD COLUMN message text;
+				IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='body') THEN
+					UPDATE notifications SET message = body WHERE message IS NULL;
+				END IF;
+			END IF;
+
+			-- Add type, related_id, related_type, updated_at if missing
+			IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='type') THEN
+				ALTER TABLE notifications ADD COLUMN type text DEFAULT 'info';
+			END IF;
+			IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='related_id') THEN
+				ALTER TABLE notifications ADD COLUMN related_id uuid;
+			END IF;
+			IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='related_type') THEN
+				ALTER TABLE notifications ADD COLUMN related_type text;
+			END IF;
+			IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='updated_at') THEN
+				ALTER TABLE notifications ADD COLUMN updated_at timestamptz DEFAULT now();
+			END IF;
 		END IF;
 	END $$;[0m
 
-2025/10/30 12:52:55 [32m/Users/aditisaxena/mental-health-be/models/seed.go:14 [33mSLOW SQL >= 200ms
-[0m[31;1m[252.365ms] [33m[rows:1][35m SELECT count(*) FROM "users"[0m
-2025/10/30 12:52:55 🌱 Seed skipped (users already exist)
-2025/10/30 12:52:55 📦 Database migrations completed successfully!
-2025/10/30 12:52:55 🚀 Server running at http://localhost:8080
+2025/10/30 17:20:59 [32m/Users/aditisaxena/mental-health-be/models/seed.go:14 [33mSLOW SQL >= 200ms
+[0m[31;1m[371.368ms] [33m[rows:1][35m SELECT count(*) FROM "users"[0m
+2025/10/30 17:20:59 🌱 Seed skipped (users already exist)
+2025/10/30 17:20:59 📦 Database migrations completed successfully!
+2025/10/30 17:20:59 🚀 Server running at http://localhost:8080
 
  ┌───────────────────────────────────────────────────┐ 
  │                   Fiber v2.52.6                   │ 
  │               http://127.0.0.1:8080               │ 
  │       (bound on host 0.0.0.0 and port 8080)       │ 
  │                                                   │ 
- │ Handlers ............ 50  Processes ........... 1 │ 
- │ Prefork ....... Disabled  PID ............. 76125 │ 
+ │ Handlers ............ 57  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 51277 │ 
  └───────────────────────────────────────────────────┘ 
 
 
-2025/10/30 13:04:12 [31;1m/Users/aditisaxena/mental-health-be/controllers/auth.go:56 [35;1mrecord not found
-[0m[33m[1918.410ms] [34;1m[rows:0][0m SELECT * FROM "users" WHERE email = 'studentverify_one@uni.com' ORDER BY "users"."id" LIMIT 1
+2025/10/30 17:21:08 [32m/Users/aditisaxena/mental-health-be/controllers/auth.go:114 [33mSLOW SQL >= 200ms
+[0m[31;1m[680.785ms] [33m[rows:1][35m SELECT * FROM "users" WHERE email = 'warden_1761824491@hostel.com' ORDER BY "users"."id" LIMIT 1[0m
 
-2025/10/30 13:04:15 [32m/Users/aditisaxena/mental-health-be/controllers/auth.go:81 [33mSLOW SQL >= 200ms
-[0m[31;1m[1036.379ms] [33m[rows:1][35m INSERT INTO "users" ("id","name","email","password","role","block","created_at") VALUES ('24b4d85b-a0e3-4bb1-918f-b0744207a21d','StudentVerifyOne','studentverify_one@uni.com','$2a$14$L4mUoFT3Qe8rpcUbyUVLHOheSAlNbEjtClf2J7iPPmQtmCV1M1dUC','student','','2025-10-30 13:04:14.667')[0m
+2025/10/30 17:21:10 [32m/Users/aditisaxena/mental-health-be/middlewares/auth.go:54 [33mSLOW SQL >= 200ms
+[0m[31;1m[754.440ms] [33m[rows:1][35m SELECT * FROM "users" WHERE id = '83d0439e-3228-4838-a0ea-e91b4b874319' ORDER BY "users"."id" LIMIT 1[0m
 
-2025/10/30 13:04:16 [32m/Users/aditisaxena/mental-health-be/controllers/auth.go:97 [33mSLOW SQL >= 200ms
-[0m[31;1m[1039.342ms] [33m[rows:1][35m INSERT INTO "student_models" ("user_id","student_identifier","hostel","room_no") VALUES ('24b4d85b-a0e3-4bb1-918f-b0744207a21d','SV-1','Block-X','210') RETURNING "id"[0m
+2025/10/30 17:21:10 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:464 [33mSLOW SQL >= 200ms
+[0m[31;1m[486.483ms] [33m[rows:1][35m SELECT * FROM "users" WHERE id = '83d0439e-3228-4838-a0ea-e91b4b874319' ORDER BY "users"."id" LIMIT 1[0m
 
-2025/10/30 13:05:16 [32m/Users/aditisaxena/mental-health-be/controllers/auth.go:114 [33mSLOW SQL >= 200ms
-[0m[31;1m[516.788ms] [33m[rows:1][35m SELECT * FROM "users" WHERE email = 'studentverify_one@uni.com' ORDER BY "users"."id" LIMIT 1[0m
+2025/10/30 17:21:12 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:472 [33mSLOW SQL >= 200ms
+[0m[31;1m[317.682ms] [33m[rows:1][35m SELECT * FROM "attachments" WHERE "attachments"."complaint_id" IN ('e7a657aa-a97b-450d-a1eb-f0ce3e80a36a','fbef4b4a-81ec-49eb-ac16-b8d5f2013e0e','fc6fe761-5ef7-40a0-97a5-aa31b2b536dc','ddabc2a4-c2ad-408e-bd74-11da160e920a','ff698d18-a970-4640-bd11-78e9da3f6009','6e388dd3-d611-4c96-8952-3b82adce96b4','2efebd67-e586-4ab0-a82f-87bb543f9b21','01667b37-4294-48ac-94f9-a963728f7b96','90d72406-b247-4341-a55a-586116936c1d','c1c54f6b-9d00-47d0-baaf-acc34905c853','c5f72d8d-6241-4913-a50b-b2152862d860','7be73891-c957-40b4-afcb-e540bb012ab7','4e3cc0a1-b9df-4cbc-9f82-e95f29126085','adfc2283-ceee-4bac-9907-d9271eb62be9','0ac4df0b-4193-4ef3-a1aa-91720a22ba67','d92ddf59-979a-4dd9-afd5-d13bcb1107f6','b82ba8de-ecd3-46e5-8ea6-29a858ef3f82','bd01d146-796b-47ec-a9e0-48c39103e7d6','db8999c4-72b6-475a-af7e-5b37c3981621','b90bed6c-cb1d-47a0-9c5d-2eea403a1c1f','1123251c-0408-416d-8e0b-28b0d123fbeb')[0m
 
-2025/10/30 13:06:05 [32m/Users/aditisaxena/mental-health-be/controllers/auth.go:114 [33mSLOW SQL >= 200ms
-[0m[31;1m[515.920ms] [33m[rows:1][35m SELECT * FROM "users" WHERE email = 'studentverify_one@uni.com' ORDER BY "users"."id" LIMIT 1[0m
+2025/10/30 17:21:12 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:472 [33mSLOW SQL >= 200ms
+[0m[31;1m[715.223ms] [33m[rows:18][35m SELECT * FROM "student_models" WHERE "student_models"."user_id" IN ('270a1e6e-e898-4b2e-93b0-5e39d3f5a46f','bb1ead0c-cd1d-4e60-80a0-d06c1705bedc','95a17d98-2a05-4995-8ecc-677777799382','eb0b4b69-fe27-4950-a64b-331989cbafb0','24b4d85b-a0e3-4bb1-918f-b0744207a21d','0491f5f5-6d08-4a3f-8b6b-ed25b8af8da5','7154b2f7-a9c1-4c41-a3f1-eef79034cbbf','0563622e-1d35-46e9-ba3d-c23d018a357c','6b066bef-a2eb-40ba-9a86-97d08e76b079','de69f941-8906-42e9-8fea-4b3cc3edce94','90bf8dde-1c45-4ae2-badc-c78aeec0d5ca','119bb871-6d5c-4b6f-b4a9-eca90409a079','28994536-4f32-4221-aa6c-653b401934ea','2a4b511d-fac2-4249-a359-3a753b02c453','08d10d2a-4dfa-4819-a716-4d64422a62a6','ed85ba7c-72fb-42a4-af23-67022f2d5bab','ddb593c3-fe1e-4d2b-86bb-10c5315f46d2','895e13f2-064c-425d-afdd-8928887543de')[0m
 
-2025/10/30 13:06:15 [32m/Users/aditisaxena/mental-health-be/controllers/auth.go:114 [33mSLOW SQL >= 200ms
-[0m[31;1m[516.413ms] [33m[rows:1][35m SELECT * FROM "users" WHERE email = 'studentverify_one@uni.com' ORDER BY "users"."id" LIMIT 1[0m
+2025/10/30 17:21:13 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:472 [33mSLOW SQL >= 200ms
+[0m[31;1m[401.781ms] [33m[rows:2][35m SELECT * FROM "timeline_entries" WHERE "timeline_entries"."complaint_id" IN ('e7a657aa-a97b-450d-a1eb-f0ce3e80a36a','fbef4b4a-81ec-49eb-ac16-b8d5f2013e0e','fc6fe761-5ef7-40a0-97a5-aa31b2b536dc','ddabc2a4-c2ad-408e-bd74-11da160e920a','ff698d18-a970-4640-bd11-78e9da3f6009','6e388dd3-d611-4c96-8952-3b82adce96b4','2efebd67-e586-4ab0-a82f-87bb543f9b21','01667b37-4294-48ac-94f9-a963728f7b96','90d72406-b247-4341-a55a-586116936c1d','c1c54f6b-9d00-47d0-baaf-acc34905c853','c5f72d8d-6241-4913-a50b-b2152862d860','7be73891-c957-40b4-afcb-e540bb012ab7','4e3cc0a1-b9df-4cbc-9f82-e95f29126085','adfc2283-ceee-4bac-9907-d9271eb62be9','0ac4df0b-4193-4ef3-a1aa-91720a22ba67','d92ddf59-979a-4dd9-afd5-d13bcb1107f6','b82ba8de-ecd3-46e5-8ea6-29a858ef3f82','bd01d146-796b-47ec-a9e0-48c39103e7d6','db8999c4-72b6-475a-af7e-5b37c3981621','b90bed6c-cb1d-47a0-9c5d-2eea403a1c1f','1123251c-0408-416d-8e0b-28b0d123fbeb')[0m
 
-2025/10/30 13:07:09 [32m/Users/aditisaxena/mental-health-be/controllers/auth.go:114 [33mSLOW SQL >= 200ms
-[0m[31;1m[514.902ms] [33m[rows:1][35m SELECT * FROM "users" WHERE email = 'studentverify_one@uni.com' ORDER BY "users"."id" LIMIT 1[0m
+2025/10/30 17:21:13 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:472 [33mSLOW SQL >= 200ms
+[0m[31;1m[726.363ms] [33m[rows:18][35m SELECT * FROM "users" WHERE "users"."id" IN ('270a1e6e-e898-4b2e-93b0-5e39d3f5a46f','bb1ead0c-cd1d-4e60-80a0-d06c1705bedc','95a17d98-2a05-4995-8ecc-677777799382','eb0b4b69-fe27-4950-a64b-331989cbafb0','24b4d85b-a0e3-4bb1-918f-b0744207a21d','0491f5f5-6d08-4a3f-8b6b-ed25b8af8da5','7154b2f7-a9c1-4c41-a3f1-eef79034cbbf','0563622e-1d35-46e9-ba3d-c23d018a357c','6b066bef-a2eb-40ba-9a86-97d08e76b079','de69f941-8906-42e9-8fea-4b3cc3edce94','90bf8dde-1c45-4ae2-badc-c78aeec0d5ca','119bb871-6d5c-4b6f-b4a9-eca90409a079','28994536-4f32-4221-aa6c-653b401934ea','2a4b511d-fac2-4249-a359-3a753b02c453','08d10d2a-4dfa-4819-a716-4d64422a62a6','ed85ba7c-72fb-42a4-af23-67022f2d5bab','ddb593c3-fe1e-4d2b-86bb-10c5315f46d2','895e13f2-064c-425d-afdd-8928887543de')[0m
 
-2025/10/30 13:08:18 [32m/Users/aditisaxena/mental-health-be/controllers/auth.go:114 [33mSLOW SQL >= 200ms
-[0m[31;1m[514.394ms] [33m[rows:1][35m SELECT * FROM "users" WHERE email = 'studentverify_one@uni.com' ORDER BY "users"."id" LIMIT 1[0m
+2025/10/30 17:21:13 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:472 [33mSLOW SQL >= 200ms
+[0m[31;1m[2987.315ms] [33m[rows:21][35m SELECT "complaints"."id","complaints"."title","complaints"."user_id","complaints"."student_identifier","complaints"."type","complaints"."description","complaints"."priority","complaints"."status","complaints"."created_at" FROM "complaints" JOIN student_models ON student_models.user_id = complaints.user_id WHERE student_models.hostel = 'Block-X' ORDER BY created_at desc[0m
 
-2025/10/30 13:14:56 [32m/Users/aditisaxena/mental-health-be/controllers/auth.go:114 [33mSLOW SQL >= 200ms
-[0m[31;1m[2230.206ms] [33m[rows:1][35m SELECT * FROM "users" WHERE email = 'studentverify_one@uni.com' ORDER BY "users"."id" LIMIT 1[0m
+2025/10/30 17:21:14 [32m/Users/aditisaxena/mental-health-be/middlewares/auth.go:54 [33mSLOW SQL >= 200ms
+[0m[31;1m[300.467ms] [33m[rows:1][35m SELECT * FROM "users" WHERE id = '83d0439e-3228-4838-a0ea-e91b4b874319' ORDER BY "users"."id" LIMIT 1[0m
 
-2025/10/30 13:17:56 [32m/Users/aditisaxena/mental-health-be/controllers/auth.go:114 [33mSLOW SQL >= 200ms
-[0m[31;1m[526.478ms] [33m[rows:1][35m SELECT * FROM "users" WHERE email = 'studentverify_one@uni.com' ORDER BY "users"."id" LIMIT 1[0m
+2025/10/30 17:21:14 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:315 [33mSLOW SQL >= 200ms
+[0m[31;1m[291.070ms] [33m[rows:1][35m SELECT * FROM "attachments" WHERE "attachments"."complaint_id" = 'e7a657aa-a97b-450d-a1eb-f0ce3e80a36a'[0m
 
-2025/10/30 13:17:58 [32m/Users/aditisaxena/mental-health-be/controllers/auth.go:114 [33mSLOW SQL >= 200ms
-[0m[31;1m[512.926ms] [33m[rows:1][35m SELECT * FROM "users" WHERE email = 'blockadmin_verify@hostel.com' ORDER BY "users"."id" LIMIT 1[0m
+2025/10/30 17:21:15 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:315 [33mSLOW SQL >= 200ms
+[0m[31;1m[315.248ms] [33m[rows:1][35m SELECT * FROM "student_models" WHERE "student_models"."user_id" = '270a1e6e-e898-4b2e-93b0-5e39d3f5a46f'[0m
 
-2025/10/30 13:18:00 [32m/Users/aditisaxena/mental-health-be/controllers/auth.go:114 [33mSLOW SQL >= 200ms
-[0m[31;1m[514.709ms] [33m[rows:1][35m SELECT * FROM "users" WHERE email = 'chiefadmin_verify@hostel.com' ORDER BY "users"."id" LIMIT 1[0m
+2025/10/30 17:21:15 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:315 [33mSLOW SQL >= 200ms
+[0m[31;1m[324.763ms] [33m[rows:0][35m SELECT * FROM "timeline_entries" WHERE "timeline_entries"."complaint_id" = 'e7a657aa-a97b-450d-a1eb-f0ce3e80a36a'[0m
 
-2025/10/30 13:18:03 [32m/Users/aditisaxena/mental-health-be/middlewares/auth.go:54 [33mSLOW SQL >= 200ms
-[0m[31;1m[525.671ms] [33m[rows:1][35m SELECT * FROM "users" WHERE id = '8ffe528f-408c-4735-b3f2-2eefda4456a3' ORDER BY "users"."id" LIMIT 1[0m
+2025/10/30 17:21:15 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:315 [33mSLOW SQL >= 200ms
+[0m[31;1m[1259.837ms] [33m[rows:1][35m SELECT * FROM "complaints" WHERE id = 'e7a657aa-a97b-450d-a1eb-f0ce3e80a36a' ORDER BY "complaints"."id" LIMIT 1[0m
 
-2025/10/30 13:18:03 [32m/Users/aditisaxena/mental-health-be/controllers/notifications.go:18 [33mSLOW SQL >= 200ms
-[0m[31;1m[304.645ms] [33m[rows:0][35m SELECT * FROM "notifications" WHERE admin_id = '8ffe528f-408c-4735-b3f2-2eefda4456a3' ORDER BY created_at desc[0m
+2025/10/30 17:21:15 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:328 [33mSLOW SQL >= 200ms
+[0m[31;1m[343.182ms] [33m[rows:1][35m SELECT * FROM "users" WHERE id = '83d0439e-3228-4838-a0ea-e91b4b874319' ORDER BY "users"."id" LIMIT 1[0m
 
-2025/10/30 13:18:04 [32m/Users/aditisaxena/mental-health-be/controllers/notifications.go:18 [33mSLOW SQL >= 200ms
-[0m[31;1m[254.973ms] [33m[rows:0][35m SELECT * FROM "notifications" WHERE admin_id = 'c7a6a21e-0f0b-4287-ae40-3ea0cdc602da' ORDER BY created_at desc[0m
+2025/10/30 17:21:16 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:340 [33mSLOW SQL >= 200ms
+[0m[31;1m[526.395ms] [33m[rows:1][35m DELETE FROM "attachments" WHERE complaint_id = 'e7a657aa-a97b-450d-a1eb-f0ce3e80a36a'[0m
 
-2025/10/30 13:19:25 [32m/Users/aditisaxena/mental-health-be/controllers/auth.go:114 [33mSLOW SQL >= 200ms
-[0m[31;1m[517.845ms] [33m[rows:1][35m SELECT * FROM "users" WHERE email = 'studentverify_one@uni.com' ORDER BY "users"."id" LIMIT 1[0m
+2025/10/30 17:21:17 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:344 [33mSLOW SQL >= 200ms
+[0m[31;1m[522.447ms] [33m[rows:0][35m DELETE FROM "timeline_entries" WHERE complaint_id = 'e7a657aa-a97b-450d-a1eb-f0ce3e80a36a'[0m
 
-2025/10/30 13:19:28 [32m/Users/aditisaxena/mental-health-be/controllers/auth.go:114 [33mSLOW SQL >= 200ms
-[0m[31;1m[510.198ms] [33m[rows:1][35m SELECT * FROM "users" WHERE email = 'blockadmin_verify@hostel.com' ORDER BY "users"."id" LIMIT 1[0m
+2025/10/30 17:21:17 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:350 [33mSLOW SQL >= 200ms
+[0m[31;1m[549.636ms] [33m[rows:0][35m DELETE FROM "notifications" WHERE related_id = 'e7a657aa-a97b-450d-a1eb-f0ce3e80a36a' AND related_type = 'complaint'[0m
 
-2025/10/30 13:19:30 [32m/Users/aditisaxena/mental-health-be/controllers/auth.go:114 [33mSLOW SQL >= 200ms
-[0m[31;1m[531.030ms] [33m[rows:1][35m SELECT * FROM "users" WHERE email = 'chiefadmin_verify@hostel.com' ORDER BY "users"."id" LIMIT 1[0m
-
-2025/10/30 13:19:33 [32m/Users/aditisaxena/mental-health-be/middlewares/auth.go:54 [33mSLOW SQL >= 200ms
-[0m[31;1m[510.223ms] [33m[rows:1][35m SELECT * FROM "users" WHERE id = '8ffe528f-408c-4735-b3f2-2eefda4456a3' ORDER BY "users"."id" LIMIT 1[0m
-
-2025/10/30 13:19:48 [32m/Users/aditisaxena/mental-health-be/controllers/notifications.go:18 [33mSLOW SQL >= 200ms
-[0m[31;1m[15217.873ms] [33m[rows:0][35m SELECT * FROM "notifications" WHERE admin_id = '8ffe528f-408c-4735-b3f2-2eefda4456a3' ORDER BY created_at desc[0m
-
-2025/10/30 13:19:49 [32m/Users/aditisaxena/mental-health-be/controllers/notifications.go:18 [33mSLOW SQL >= 200ms
-[0m[31;1m[511.953ms] [33m[rows:0][35m SELECT * FROM "notifications" WHERE admin_id = 'c7a6a21e-0f0b-4287-ae40-3ea0cdc602da' ORDER BY created_at desc[0m
-
-2025/10/30 13:20:59 [32m/Users/aditisaxena/mental-health-be/controllers/auth.go:114 [33mSLOW SQL >= 200ms
-[0m[31;1m[511.510ms] [33m[rows:1][35m SELECT * FROM "users" WHERE email = 'studentverify_one@uni.com' ORDER BY "users"."id" LIMIT 1[0m
-
-2025/10/30 13:21:01 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:52 [33mSLOW SQL >= 200ms
-[0m[31;1m[516.533ms] [33m[rows:1][35m SELECT * FROM "student_models" WHERE user_id = '24b4d85b-a0e3-4bb1-918f-b0744207a21d' ORDER BY "student_models"."id" LIMIT 1[0m
-
-2025/10/30 13:21:02 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:58 [33mSLOW SQL >= 200ms
-[0m[31;1m[264.013ms] [33m[rows:1][35m INSERT INTO "complaints" ("title","user_id","student_identifier","type","description","priority","status","created_at","id") VALUES ('VerifyNotify-SV1-automated','24b4d85b-a0e3-4bb1-918f-b0744207a21d','SV-1','plumbing','Trigger notification via script','medium','open','2025-10-30 13:21:02.031','01667b37-4294-48ac-94f9-a963728f7b96') RETURNING "id"[0m
-
-2025/10/30 13:21:02 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:102 [33mSLOW SQL >= 200ms
-[0m[31;1m[254.792ms] [33m[rows:1][35m SELECT * FROM "student_models" WHERE user_id = '24b4d85b-a0e3-4bb1-918f-b0744207a21d' ORDER BY "student_models"."id" LIMIT 1[0m
-
-2025/10/30 13:21:03 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:108 [33mSLOW SQL >= 200ms
-[0m[31;1m[526.222ms] [33m[rows:18][35m SELECT * FROM "users" WHERE role = 'admin' AND block = 'Block-X'[0m
-
-2025/10/30 13:21:03 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:111 [33mSLOW SQL >= 200ms
-[0m[31;1m[509.351ms] [33m[rows:9][35m SELECT * FROM "users" WHERE role = 'chief_admin'[0m
-
-2025/10/30 13:21:04 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[770.283ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('f7c82b7d-1650-4d75-9cab-2f023ac4858f','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:04.098','24ef2716-8505-4a35-9870-c31102a0b766') RETURNING "id"[0m
-
-2025/10/30 13:21:04 [32m/Users/aditisaxena/mental-health-be/controllers/auth.go:114 [33mSLOW SQL >= 200ms
-[0m[31;1m[2116.962ms] [33m[rows:1][35m SELECT * FROM "users" WHERE email = 'blockadmin_verify@hostel.com' ORDER BY "users"."id" LIMIT 1[0m
-
-2025/10/30 13:21:05 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[768.987ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('8ffe528f-408c-4735-b3f2-2eefda4456a3','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:04.871','c5cafd3a-185d-4c95-be42-38cbf96d3763') RETURNING "id"[0m
-
-2025/10/30 13:21:06 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[773.098ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('c7a6a21e-0f0b-4287-ae40-3ea0cdc602da','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:05.639','c92df7b3-a77e-4a7a-9a1a-0d36b807989f') RETURNING "id"[0m
-
-2025/10/30 13:21:06 [32m/Users/aditisaxena/mental-health-be/controllers/auth.go:114 [33mSLOW SQL >= 200ms
-[0m[31;1m[529.158ms] [33m[rows:1][35m SELECT * FROM "users" WHERE email = 'chiefadmin_verify@hostel.com' ORDER BY "users"."id" LIMIT 1[0m
-
-2025/10/30 13:21:06 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[777.196ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('b1c93c15-c62e-4bc0-99a6-ca1f45d36661','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:06.412','e970bde8-1c43-4b40-abab-eb21615c7cd0') RETURNING "id"[0m
-
-2025/10/30 13:21:07 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[769.300ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('5cf98c6a-c21e-40d5-8997-49171b9be5a5','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:07.19','8eee2901-ce97-462d-b99a-89b992bfc8bb') RETURNING "id"[0m
-
-2025/10/30 13:21:08 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[767.868ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('928a430b-615a-4c44-9324-bcd4da00d534','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:07.959','be351d06-2b8f-430e-a12e-b12a2e6afe8d') RETURNING "id"[0m
-
-2025/10/30 13:21:09 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[767.640ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('9b049de6-c526-49d5-91f3-7cd8ecdd1586','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:08.727','a6ec10fb-0595-4706-88f9-981d37f019b6') RETURNING "id"[0m
-
-2025/10/30 13:21:10 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[766.426ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('20465244-7179-4ae3-99f9-7cd1c78d716e','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:09.494','3062141d-8b05-484c-8b89-cc099bd062d8') RETURNING "id"[0m
-
-2025/10/30 13:21:10 [32m/Users/aditisaxena/mental-health-be/middlewares/auth.go:54 [33mSLOW SQL >= 200ms
-[0m[31;1m[1057.480ms] [33m[rows:1][35m SELECT * FROM "users" WHERE id = '8ffe528f-408c-4735-b3f2-2eefda4456a3' ORDER BY "users"."id" LIMIT 1[0m
-
-2025/10/30 13:21:10 [32m/Users/aditisaxena/mental-health-be/controllers/notifications.go:18 [33mSLOW SQL >= 200ms
-[0m[31;1m[525.551ms] [33m[rows:1][35m SELECT * FROM "notifications" WHERE admin_id = '8ffe528f-408c-4735-b3f2-2eefda4456a3' ORDER BY created_at desc[0m
-
-2025/10/30 13:21:11 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[1241.525ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('7f242124-e22d-42b5-8e12-46661b8ad78c','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:10.262','6549a23c-49b2-41dc-a60f-cfef737a5d94') RETURNING "id"[0m
-
-2025/10/30 13:21:11 [32m/Users/aditisaxena/mental-health-be/controllers/notifications.go:18 [33mSLOW SQL >= 200ms
-[0m[31;1m[261.892ms] [33m[rows:1][35m SELECT * FROM "notifications" WHERE admin_id = 'c7a6a21e-0f0b-4287-ae40-3ea0cdc602da' ORDER BY created_at desc[0m
-
-2025/10/30 13:21:12 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[1030.755ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('f739ee64-aaa8-4e43-bc34-06fdeb1ca3f5','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:11.758','62d9548a-d680-4bb8-8b23-14337345ee08') RETURNING "id"[0m
-
-2025/10/30 13:21:13 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[1147.836ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('3a8404a4-4863-4d67-8186-8b66e5644705','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:12.84','9ee2e32e-0bbb-418c-9eb9-1c575dcba09a') RETURNING "id"[0m
-
-2025/10/30 13:21:14 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[1202.045ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('4ecb5525-490c-4ecd-b8d0-124584c4cdfe','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:14.024','95cd504a-1fbe-4141-b17a-af83ca074d33') RETURNING "id"[0m
-
-2025/10/30 13:21:15 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[1264.060ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('0454032a-0c26-404b-ad24-1e0343e0a54b','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:15.279','51ab5553-e87f-4ba1-8b95-1d74d3512acd') RETURNING "id"[0m
-
-2025/10/30 13:21:17 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[1199.097ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('5f41b3cc-dd3f-4ef1-9e30-651d92425871','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:16.495','6b470a68-ade8-4683-a182-d6d3cccd215d') RETURNING "id"[0m
-
-2025/10/30 13:21:18 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[1192.706ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('352e8377-2367-4532-81dc-d695ee2425bc','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:17.692','cb22deef-346d-45f4-9e0f-721c4ba7c8a9') RETURNING "id"[0m
-
-2025/10/30 13:21:19 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[1230.219ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('a034f751-b35a-4d6e-800b-8b4e9613c276','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:18.903','39485ea8-3326-4700-b4b8-339c3c229e07') RETURNING "id"[0m
-
-2025/10/30 13:21:20 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[1211.182ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('3cce5a3a-6f5a-460c-843d-ec15cafa2e13','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:20.124','f8a718e5-53c4-4292-9fae-b1e0b3b75e88') RETURNING "id"[0m
-
-2025/10/30 13:21:21 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[1205.262ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('3de324ec-148c-41af-b44b-5feeb6ff4821','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:21.322','1befed14-b90a-416e-8d54-f8844a502dc1') RETURNING "id"[0m
-
-2025/10/30 13:21:23 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[1197.255ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('55675ab3-9215-42c7-a167-ae777d457729','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:22.53','96baba8f-97dd-4317-b7a9-4ce594fa0c8f') RETURNING "id"[0m
-
-2025/10/30 13:21:24 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[1261.091ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('43664075-911f-4e5d-a31c-fb115dcd0135','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:23.779','38292501-dec9-40bf-be9c-df38c8ad8d99') RETURNING "id"[0m
-
-2025/10/30 13:21:25 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[1239.672ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('36f62101-d942-4f1b-8d27-d17ded5a399f','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:25.011','71ff16c3-2fe7-4f16-9f0c-76cd1a6e2289') RETURNING "id"[0m
-
-2025/10/30 13:21:26 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[1353.281ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('56ff9736-7391-4862-9d20-f1bed4b4b3f3','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:26.259','016fbbcb-6337-46a9-91bd-3de5e81fef98') RETURNING "id"[0m
-
-2025/10/30 13:21:28 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[1252.760ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('f7d7ee20-0ceb-4134-b6dc-3548a087fc4e','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:27.614','98421f4e-e306-4c73-a24a-8ae0aba523c8') RETURNING "id"[0m
-
-2025/10/30 13:21:29 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[1272.314ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('8f82d236-c8a2-4292-9f9f-b846c41c3347','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:28.865','24ce9b34-d5aa-4949-9e02-1467e61e72e7') RETURNING "id"[0m
-
-2025/10/30 13:21:30 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[1281.292ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('b554fd54-65ee-490a-8ca8-4f4b6b15afc9','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:30.152','61828fa9-fade-434f-879a-51355b55733d') RETURNING "id"[0m
-
-2025/10/30 13:21:36 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[5579.217ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('ca29d57b-6cc6-4fba-9817-effbb1e60340','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:31.434','30ac8a7a-3ba4-4d50-a2a1-10388406500a') RETURNING "id"[0m
-
-2025/10/30 13:21:37 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:133 [33mSLOW SQL >= 200ms
-[0m[31;1m[1583.968ms] [33m[rows:1][35m INSERT INTO "notifications" ("admin_id","title","body","link","is_read","created_at","id") VALUES ('f4eb58f1-8d39-4b8c-ba36-68ca66109652','New Complaint Submitted','A student has submitted a complaint: VerifyNotify-SV1-automated','/admin/complaints',false,'2025-10-30 13:21:37.022','021f5351-6a76-4eaf-9261-d92996e2f4d6') RETURNING "id"[0m
+2025/10/30 17:21:18 [32m/Users/aditisaxena/mental-health-be/controllers/complaint.go:356 [33mSLOW SQL >= 200ms
+[0m[31;1m[319.911ms] [33m[rows:1][35m DELETE FROM "complaints" WHERE id = 'e7a657aa-a97b-450d-a1eb-f0ce3e80a36a'[0m

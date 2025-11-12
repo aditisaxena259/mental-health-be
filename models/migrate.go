@@ -159,6 +159,17 @@ func AutoMigrateAll() {
 	END $$;`)
 
 	// --- Create or migrate notifications table to new schema ---
+	// Drop old admin_id column first (separate statement to avoid conflicts)
+	config.DB.Exec(`DO $$ BEGIN
+		IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='admin_id') THEN
+			ALTER TABLE notifications ALTER COLUMN admin_id DROP NOT NULL;
+			ALTER TABLE notifications DROP COLUMN admin_id;
+		END IF;
+		IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='body') THEN
+			ALTER TABLE notifications DROP COLUMN body;
+		END IF;
+	END $$;`)
+
 	config.DB.Exec(`DO $$ BEGIN
 		-- If notifications table doesn't exist, create with the new schema
 		IF NOT EXISTS (SELECT 1 FROM pg_tables WHERE schemaname = CURRENT_SCHEMA() AND tablename = 'notifications') THEN
@@ -176,20 +187,14 @@ func AutoMigrateAll() {
 			);
 		ELSE
 			-- Table exists: ensure new columns exist and migrate legacy columns
-			-- Add user_id if missing and copy from admin_id when present
+			-- Add user_id if missing
 			IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='user_id') THEN
-				ALTER TABLE notifications ADD COLUMN user_id uuid;
-				IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='admin_id') THEN
-					UPDATE notifications SET user_id = admin_id WHERE user_id IS NULL;
-				END IF;
+				ALTER TABLE notifications ADD COLUMN user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE;
 			END IF;
 
-			-- Add message column and copy from body if body exists
+			-- Add message column
 			IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='message') THEN
-				ALTER TABLE notifications ADD COLUMN message text;
-				IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='body') THEN
-					UPDATE notifications SET message = body WHERE message IS NULL;
-				END IF;
+				ALTER TABLE notifications ADD COLUMN message text NOT NULL DEFAULT '';
 			END IF;
 
 			-- Add type, related_id, related_type, updated_at if missing

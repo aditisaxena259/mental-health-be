@@ -87,6 +87,11 @@ func SetupRoutes(app *fiber.App) {
 	api.Get("/dev/reset-token", controllers.DevGetResetToken)
 
 	// -------------------------------
+	// USER PROFILE (accessible to all authenticated users)
+	// -------------------------------
+	protected.Get("/profile", controllers.GetProfile)
+
+	// -------------------------------
 	// Profile routes
 	// -------------------------------
 	// student.Get("/profile", controllers.GetOwnProfile) // removed

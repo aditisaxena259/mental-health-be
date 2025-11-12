@@ -42,6 +42,15 @@ if [ -z "$ADMIN_TOKEN" ] || [ "$ADMIN_TOKEN" == "null" ]; then
 fi
 echo "✅ Admin login successful"
 
+# Test profile endpoints
+STUDENT_PROFILE=$(curl -s -X GET $BASE/profile -H "Authorization: Bearer $STUDENT_TOKEN")
+echo -e "\n👤 Student profile:"
+echo "$STUDENT_PROFILE" | jq . || echo "$STUDENT_PROFILE"
+
+ADMIN_PROFILE=$(curl -s -X GET $BASE/profile -H "Authorization: Bearer $ADMIN_TOKEN")
+echo -e "\n👤 Admin profile:"
+echo "$ADMIN_PROFILE" | jq . || echo "$ADMIN_PROFILE"
+
 
 # Test complaint creation as student (with JPEG attachment)
 COMPLAINT_RESP=$(curl -s -X POST $BASE/student/complaints \

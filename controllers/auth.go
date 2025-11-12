@@ -181,3 +181,45 @@ func ResetPassword(c *fiber.Ctx) error {
 func DevGetResetToken(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"token": "dev-reset-token-stub"})
 }
+
+// GET /profile - Get user profile details (student or warden)
+func GetProfile(c *fiber.Ctx) error {
+	userID, ok := c.Locals("user_id").(string)
+	if !ok || userID == "" {
+		return c.Status(401).JSON(fiber.Map{"error": "Unauthorized: missing user ID"})
+	}
+
+	// Fetch user details
+	var user models.User
+	if err := config.DB.First(&user, "id = ?", userID).Error; err != nil {
+		return c.Status(404).JSON(fiber.Map{"error": "User not found"})
+	}
+
+	// Build response based on role
+	response := fiber.Map{
+		"id":         user.ID,
+		"name":       user.Name,
+		"email":      user.Email,
+		"role":       user.Role,
+		"block":      user.Block,
+		"created_at": user.CreatedAt,
+	}
+
+	// If student, fetch additional student details
+	if user.Role == models.Student {
+		var student models.StudentModel
+		if err := config.DB.Where("user_id = ?", user.ID).First(&student).Error; err == nil {
+			response["student_details"] = fiber.Map{
+				"student_id": student.StudentIdentifier,
+				"block":      student.Block,
+				"hostel":     student.Block, // alias for block
+				"room_no":    student.RoomNo,
+			}
+		}
+	}
+
+	return c.JSON(fiber.Map{
+		"message": "Profile retrieved successfully",
+		"data":    response,
+	})
+}

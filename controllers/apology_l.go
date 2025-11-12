@@ -128,10 +128,10 @@ func SubmitApology(c *fiber.Ctx) error {
 		if err := config.DB.Where("user_id = ?", a.StudentID).First(&sm).Error; err != nil {
 			return
 		}
-		hostel := sm.Hostel
+		block := sm.Block
 		var admins []models.User
-		if hostel != "" {
-			config.DB.Where("role = ? AND block = ?", models.Admin, hostel).Find(&admins)
+		if block != "" {
+			config.DB.Where("role = ? AND block = ?", models.Admin, block).Find(&admins)
 		}
 		var chiefs []models.User
 		config.DB.Where("role = ?", models.ChiefAdmin).Find(&chiefs)
@@ -206,6 +206,8 @@ func GetStudentApologies(c *fiber.Ctx) error {
 // 🧑‍💼 ADMIN — Get All or Filtered Apologies
 func GetApologies(c *fiber.Ctx) error {
 	var apologies []models.Apology
+	role, _ := c.Locals("role").(string)
+	userID, _ := c.Locals("user_id").(string)
 	query := config.DB.Preload("Student.User").Preload("Attachments")
 
 	if apologyType := c.Query("type"); apologyType != "" {
@@ -213,6 +215,17 @@ func GetApologies(c *fiber.Ctx) error {
 	}
 	if status := c.Query("status"); status != "" {
 		query = query.Where("status = ?", status)
+	}
+
+	// Block admin: only see apologies for their block
+	if role == string(models.Admin) && userID != "" {
+		var reqUser models.User
+		if err := config.DB.First(&reqUser, "id = ?", userID).Error; err == nil {
+			if reqUser.Block != "" {
+				query = query.Joins("LEFT JOIN student_models ON student_models.user_id = apologies.student_id").
+					Where("student_models.block = ?", reqUser.Block)
+			}
+		}
 	}
 
 	if err := query.Order("created_at desc").Find(&apologies).Error; err != nil {

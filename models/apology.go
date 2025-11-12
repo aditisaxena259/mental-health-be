@@ -35,7 +35,7 @@ type Apology struct {
 	Comment           string        `gorm:"type:text" json:"comment"`
 	CreatedAt         time.Time     `gorm:"autoCreateTime" json:"created_at"`
 
-	// ✅ fix relationship properly
+	// Fix relationship: StudentID (apology) -> ID (student_models)
 	Student StudentModel `gorm:"foreignKey:StudentID;references:UserID;constraint:OnDelete:CASCADE;" json:"student"`
 
 	// Attachments uploaded with the apology

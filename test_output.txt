@@ -1,0 +1,391 @@
+🚀 Starting Hostel Management API test sequence...
+-----------------------------------------------
+✅ Student login successful
+✅ Admin login successful
+
+🧾 Complaint creation (student):
+{
+  "id": "a907a046-bf62-4f8c-a73f-57a5439a1328",
+  "message": "Complaint submitted successfully"
+}
+
+📋 All complaints (student):
+{
+  "count": 3,
+  "data": [
+    {
+      "ID": "a907a046-bf62-4f8c-a73f-57a5439a1328",
+      "Title": "Fan not working",
+      "UserID": "cb191447-7bfd-4fb9-ab7f-ec0280b79f59",
+      "student_identifier": "",
+      "Type": "electricity",
+      "Description": "Fan in my room stopped working",
+      "priority": "medium",
+      "Status": "open",
+      "CreatedAt": "2025-11-12T10:14:53.558885Z",
+      "user": {
+        "id": "cb191447-7bfd-4fb9-ab7f-ec0280b79f59",
+        "name": "Student1",
+        "email": "student1@uni.com",
+        "password": "$2a$14$eBIaTq.s1aCJ7hga7P5nP.ZKVEMxTzJ.U8Ff8TbFzV8Abt/r9XXuy",
+        "role": "student",
+        "block": "A",
+        "created_at": "2025-11-12T09:58:44.920717Z"
+      },
+      "student": {
+        "id": "00000000-0000-0000-0000-000000000000",
+        "user_id": "00000000-0000-0000-0000-000000000000",
+        "student_id": "",
+        "block": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "00000000-0000-0000-0000-000000000000",
+          "name": "",
+          "email": "",
+          "password": "",
+          "role": "",
+          "block": "",
+          "created_at": "0001-01-01T00:00:00Z"
+        }
+      },
+      "attachments": [
+        {
+          "ID": "b162332d-0e5f-4c43-adb7-a1a09ad8860d",
+          "ComplaintID": "a907a046-bf62-4f8c-a73f-57a5439a1328",
+          "FileName": "tiny.jpg",
+          "FileURL": "https://res.cloudinary.com/dioalthuc/image/upload/v1762942495/complaints/a907a046-bf62-4f8c-a73f-57a5439a1328/064bf5f5-b446-4884-b030-5acbd97b1c8e.jpg",
+          "PublicID": "complaints/a907a046-bf62-4f8c-a73f-57a5439a1328/064bf5f5-b446-4884-b030-5acbd97b1c8e",
+          "Size": "346",
+          "FilePath": "uploads/attachments/a907a046-bf62-4f8c-a73f-57a5439a1328/tiny.jpg"
+        }
+      ],
+      "timeline": []
+    },
+    {
+      "ID": "b6248ad2-1291-4abe-adce-efbfc2f83866",
+      "Title": "Fan not working",
+      "UserID": "cb191447-7bfd-4fb9-ab7f-ec0280b79f59",
+      "student_identifier": "",
+      "Type": "electricity",
+      "Description": "Fan in my room stopped working",
+      "priority": "medium",
+      "Status": "open",
+      "CreatedAt": "2025-11-12T10:11:48.159902Z",
+      "user": {
+        "id": "cb191447-7bfd-4fb9-ab7f-ec0280b79f59",
+        "name": "Student1",
+        "email": "student1@uni.com",
+        "password": "$2a$14$eBIaTq.s1aCJ7hga7P5nP.ZKVEMxTzJ.U8Ff8TbFzV8Abt/r9XXuy",
+        "role": "student",
+        "block": "A",
+        "created_at": "2025-11-12T09:58:44.920717Z"
+      },
+      "student": {
+        "id": "00000000-0000-0000-0000-000000000000",
+        "user_id": "00000000-0000-0000-0000-000000000000",
+        "student_id": "",
+        "block": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "00000000-0000-0000-0000-000000000000",
+          "name": "",
+          "email": "",
+          "password": "",
+          "role": "",
+          "block": "",
+          "created_at": "0001-01-01T00:00:00Z"
+        }
+      },
+      "attachments": [
+        {
+          "ID": "ab6a6e8c-16aa-4aee-8194-c9fc2c282d21",
+          "ComplaintID": "b6248ad2-1291-4abe-adce-efbfc2f83866",
+          "FileName": "tiny.jpg",
+          "FileURL": "https://res.cloudinary.com/dioalthuc/image/upload/v1762942310/complaints/b6248ad2-1291-4abe-adce-efbfc2f83866/f350f24f-ca6f-40cf-8777-562023532164.jpg",
+          "PublicID": "complaints/b6248ad2-1291-4abe-adce-efbfc2f83866/f350f24f-ca6f-40cf-8777-562023532164",
+          "Size": "346",
+          "FilePath": "uploads/attachments/b6248ad2-1291-4abe-adce-efbfc2f83866/tiny.jpg"
+        }
+      ],
+      "timeline": []
+    },
+    {
+      "ID": "7e9d6de9-4196-4c98-a398-4f343e5fa9af",
+      "Title": "Fan not working",
+      "UserID": "cb191447-7bfd-4fb9-ab7f-ec0280b79f59",
+      "student_identifier": "",
+      "Type": "electricity",
+      "Description": "Fan in my room stopped working",
+      "priority": "medium",
+      "Status": "open",
+      "CreatedAt": "2025-11-12T10:07:28.413903Z",
+      "user": {
+        "id": "cb191447-7bfd-4fb9-ab7f-ec0280b79f59",
+        "name": "Student1",
+        "email": "student1@uni.com",
+        "password": "$2a$14$eBIaTq.s1aCJ7hga7P5nP.ZKVEMxTzJ.U8Ff8TbFzV8Abt/r9XXuy",
+        "role": "student",
+        "block": "A",
+        "created_at": "2025-11-12T09:58:44.920717Z"
+      },
+      "student": {
+        "id": "00000000-0000-0000-0000-000000000000",
+        "user_id": "00000000-0000-0000-0000-000000000000",
+        "student_id": "",
+        "block": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "00000000-0000-0000-0000-000000000000",
+          "name": "",
+          "email": "",
+          "password": "",
+          "role": "",
+          "block": "",
+          "created_at": "0001-01-01T00:00:00Z"
+        }
+      },
+      "attachments": [
+        {
+          "ID": "144de00d-7250-4249-b610-7fdf76bb73e4",
+          "ComplaintID": "7e9d6de9-4196-4c98-a398-4f343e5fa9af",
+          "FileName": "tiny.jpg",
+          "FileURL": "https://res.cloudinary.com/dioalthuc/image/upload/v1762942050/complaints/7e9d6de9-4196-4c98-a398-4f343e5fa9af/93d9dde9-0759-4ac0-8444-cd91e4de20c9.jpg",
+          "PublicID": "complaints/7e9d6de9-4196-4c98-a398-4f343e5fa9af/93d9dde9-0759-4ac0-8444-cd91e4de20c9",
+          "Size": "346",
+          "FilePath": "uploads/attachments/7e9d6de9-4196-4c98-a398-4f343e5fa9af/tiny.jpg"
+        }
+      ],
+      "timeline": []
+    }
+  ]
+}
+
+📋 All complaints (warden/admin):
+{
+  "count": 0,
+  "data": []
+}
+
+✉️ Apology submission (student):
+{
+  "data": {
+    "id": "0ed0102e-ef94-406f-a5b3-0beac44d0039",
+    "student_id": "cb191447-7bfd-4fb9-ab7f-ec0280b79f59",
+    "student_identifier": "",
+    "type": "misconduct",
+    "message": "Apology for missing roll call",
+    "description": "Woke up late, will be careful next time",
+    "status": "submitted",
+    "comment": "",
+    "created_at": "2025-11-12T10:15:00.914201Z",
+    "student": {
+      "id": "00000000-0000-0000-0000-000000000000",
+      "user_id": "00000000-0000-0000-0000-000000000000",
+      "student_id": "",
+      "block": "",
+      "hostel": "",
+      "room_no": "",
+      "user": {
+        "id": "00000000-0000-0000-0000-000000000000",
+        "name": "",
+        "email": "",
+        "password": "",
+        "role": "",
+        "block": "",
+        "created_at": "0001-01-01T00:00:00Z"
+      }
+    },
+    "attachments": [
+      {
+        "id": "f199228b-5c35-4b95-a8e8-0f9fd4e6a9e6",
+        "apology_id": "0ed0102e-ef94-406f-a5b3-0beac44d0039",
+        "file_name": "tiny.jpg",
+        "file_url": "https://res.cloudinary.com/dioalthuc/image/upload/v1762942501/apologies/0ed0102e-ef94-406f-a5b3-0beac44d0039/a86a6c07-4056-4079-b71b-d037381ff07c.jpg",
+        "public_id": "apologies/0ed0102e-ef94-406f-a5b3-0beac44d0039/a86a6c07-4056-4079-b71b-d037381ff07c",
+        "size": "346"
+      }
+    ]
+  },
+  "message": "Apology letter submitted successfully"
+}
+
+📬 All apologies (student):
+{
+  "count": 4,
+  "data": [
+    {
+      "id": "0ed0102e-ef94-406f-a5b3-0beac44d0039",
+      "student_id": "cb191447-7bfd-4fb9-ab7f-ec0280b79f59",
+      "student_identifier": "",
+      "type": "misconduct",
+      "message": "Apology for missing roll call",
+      "description": "Woke up late, will be careful next time",
+      "status": "submitted",
+      "comment": "",
+      "created_at": "2025-11-12T10:15:00.914201Z",
+      "student": {
+        "id": "00000000-0000-0000-0000-000000000000",
+        "user_id": "00000000-0000-0000-0000-000000000000",
+        "student_id": "",
+        "block": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "00000000-0000-0000-0000-000000000000",
+          "name": "",
+          "email": "",
+          "password": "",
+          "role": "",
+          "block": "",
+          "created_at": "0001-01-01T00:00:00Z"
+        }
+      },
+      "attachments": [
+        {
+          "id": "f199228b-5c35-4b95-a8e8-0f9fd4e6a9e6",
+          "apology_id": "0ed0102e-ef94-406f-a5b3-0beac44d0039",
+          "file_name": "tiny.jpg",
+          "file_url": "https://res.cloudinary.com/dioalthuc/image/upload/v1762942501/apologies/0ed0102e-ef94-406f-a5b3-0beac44d0039/a86a6c07-4056-4079-b71b-d037381ff07c.jpg",
+          "public_id": "apologies/0ed0102e-ef94-406f-a5b3-0beac44d0039/a86a6c07-4056-4079-b71b-d037381ff07c",
+          "size": "346"
+        }
+      ]
+    },
+    {
+      "id": "f0fac174-19ed-4210-9086-52f42ef23903",
+      "student_id": "cb191447-7bfd-4fb9-ab7f-ec0280b79f59",
+      "student_identifier": "",
+      "type": "misconduct",
+      "message": "Apology for missing roll call",
+      "description": "Woke up late, will be careful next time",
+      "status": "submitted",
+      "comment": "",
+      "created_at": "2025-11-12T10:11:59.973955Z",
+      "student": {
+        "id": "00000000-0000-0000-0000-000000000000",
+        "user_id": "00000000-0000-0000-0000-000000000000",
+        "student_id": "",
+        "block": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "00000000-0000-0000-0000-000000000000",
+          "name": "",
+          "email": "",
+          "password": "",
+          "role": "",
+          "block": "",
+          "created_at": "0001-01-01T00:00:00Z"
+        }
+      },
+      "attachments": [
+        {
+          "id": "e1992dbb-debf-4e17-ac83-9fc709c31835",
+          "apology_id": "f0fac174-19ed-4210-9086-52f42ef23903",
+          "file_name": "tiny.jpg",
+          "file_url": "https://res.cloudinary.com/dioalthuc/image/upload/v1762942320/apologies/f0fac174-19ed-4210-9086-52f42ef23903/49b3f2c0-679f-48bd-8e7f-59a1f6ab70dd.jpg",
+          "public_id": "apologies/f0fac174-19ed-4210-9086-52f42ef23903/49b3f2c0-679f-48bd-8e7f-59a1f6ab70dd",
+          "size": "346"
+        }
+      ]
+    },
+    {
+      "id": "a9f0bea8-ecaf-487b-8b1c-af7a9ee7ef63",
+      "student_id": "cb191447-7bfd-4fb9-ab7f-ec0280b79f59",
+      "student_identifier": "",
+      "type": "misconduct",
+      "message": "Apology for missing roll call",
+      "description": "Woke up late, will be careful next time",
+      "status": "submitted",
+      "comment": "",
+      "created_at": "2025-11-12T10:07:39.4547Z",
+      "student": {
+        "id": "00000000-0000-0000-0000-000000000000",
+        "user_id": "00000000-0000-0000-0000-000000000000",
+        "student_id": "",
+        "block": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "00000000-0000-0000-0000-000000000000",
+          "name": "",
+          "email": "",
+          "password": "",
+          "role": "",
+          "block": "",
+          "created_at": "0001-01-01T00:00:00Z"
+        }
+      },
+      "attachments": [
+        {
+          "id": "ca4b974a-e813-4d50-b498-179ee337d08d",
+          "apology_id": "a9f0bea8-ecaf-487b-8b1c-af7a9ee7ef63",
+          "file_name": "tiny.jpg",
+          "file_url": "https://res.cloudinary.com/dioalthuc/image/upload/v1762942060/apologies/a9f0bea8-ecaf-487b-8b1c-af7a9ee7ef63/9e10e2cb-13e9-4555-9377-1ea7c185973e.jpg",
+          "public_id": "apologies/a9f0bea8-ecaf-487b-8b1c-af7a9ee7ef63/9e10e2cb-13e9-4555-9377-1ea7c185973e",
+          "size": "346"
+        }
+      ]
+    },
+    {
+      "id": "e6c75006-e64d-4d05-a386-1f99f43afa02",
+      "student_id": "cb191447-7bfd-4fb9-ab7f-ec0280b79f59",
+      "student_identifier": "",
+      "type": "misconduct",
+      "message": "Apology for missing roll call",
+      "description": "Woke up late, will be careful next time",
+      "status": "submitted",
+      "comment": "",
+      "created_at": "2025-11-12T10:04:06.944543Z",
+      "student": {
+        "id": "00000000-0000-0000-0000-000000000000",
+        "user_id": "00000000-0000-0000-0000-000000000000",
+        "student_id": "",
+        "block": "",
+        "hostel": "",
+        "room_no": "",
+        "user": {
+          "id": "00000000-0000-0000-0000-000000000000",
+          "name": "",
+          "email": "",
+          "password": "",
+          "role": "",
+          "block": "",
+          "created_at": "0001-01-01T00:00:00Z"
+        }
+      },
+      "attachments": []
+    }
+  ]
+}
+
+📬 All apologies (warden/admin):
+{
+  "count": 0,
+  "data": []
+}
+
+📊 Metrics (status summary):
+{
+  "inprogress": 0,
+  "open": 3,
+  "resolved": 0,
+  "total": 3
+}
+
+📊 Metrics (resolution rate):
+{
+  "resolution_rate": 0
+}
+
+📊 Metrics (pending count):
+{
+  "pending_count": 3
+}
+
+-----------------------------------------------
+✅ All endpoints tested successfully!
+

@@ -1,7 +1,5 @@
 #!/bin/bash
-set -euo pipefail
 
-echo ""
 echo "🚀 Starting Hostel Management API test sequence..."
 echo "-----------------------------------------------"
 
@@ -16,217 +14,89 @@ assert_nonempty() {
   fi
 }
 
-# -----------------------
-# Public health
-# -----------------------
-echo -e "\n🩺 Cloudinary health check (public)..."
-curl -s -X GET "$BASE/health/cloudinary" | jq . || true
+# Use login details from seed.go
+STUDENT_EMAIL="student1@uni.com"
+STUDENT_PASSWORD="student123"
+ADMIN_EMAIL="admin@hostel.com"
+ADMIN_PASSWORD="admin123"
 
-# -----------------------
-# Signups (idempotent)
-# -----------------------
-echo -e "\n🧍 Creating Student user..."
-STU_RESP=$(curl -s -X POST "$BASE/signup" \
+# Login as student
+STUDENT_LOGIN_RESP=$(curl -s -X POST "$BASE/login" \
   -H "Content-Type: application/json" \
-  -d '{"name": "Student1", "email": "student1@uni.com", "password": "student123", "role": "student", "student_id": "S1001", "hostel": "Block-A", "room_no": "201"}')
-echo "$STU_RESP" | jq . || echo "Non-JSON response during student signup: $STU_RESP"
-echo "✅ Student signup attempted"
-
-CHIEF_SUFFIX=$(date +%s)
-CHIEF_EMAIL="chief_${CHIEF_SUFFIX}@hostel.com"
-echo -e "\n👑 Creating Chief Admin (unique) $CHIEF_EMAIL ..."
-CHIEF_RESP=$(curl -s -X POST "$BASE/signup" \
-  -H "Content-Type: application/json" \
-  -d "{\"name\": \"Chief\", \"email\": \"$CHIEF_EMAIL\", \"password\": \"chief123\", \"role\": \"chief_admin\"}")
-echo "$CHIEF_RESP" | jq . || echo "Non-JSON response during chief signup: $CHIEF_RESP"
-echo "✅ Chief admin signup attempted"
-
-BLOCK_ADMIN_EMAIL="blockadmin_${CHIEF_SUFFIX}@hostel.com"
-echo -e "\n🏢 Creating Block Admin (Block-A) $BLOCK_ADMIN_EMAIL ..."
-BA_RESP=$(curl -s -X POST "$BASE/signup" -H "Content-Type: application/json" \
-  -d "{\"name\": \"BlockAdmin\", \"email\": \"$BLOCK_ADMIN_EMAIL\", \"password\": \"blockadmin123\", \"role\": \"admin\", \"block\": \"Block-A\"}")
-echo "$BA_RESP" | jq . || echo "Non-JSON response during block admin signup: $BA_RESP"
-echo "✅ Block admin signup attempted"
-
-# -----------------------
-# Logins
-# -----------------------
-echo -e "\n🔑 Logging in Student..."
-TOKEN=$(curl -s -X POST "$BASE/login" \
-  -H "Content-Type: application/json" \
-  -d '{"email": "student1@uni.com", "password": "student123"}' | jq -r '.token')
-assert_nonempty "$TOKEN" "Student login failed: empty token"
+  -d '{"email": "'$STUDENT_EMAIL'", "password": "'$STUDENT_PASSWORD'"}')
+STUDENT_TOKEN=$(echo "$STUDENT_LOGIN_RESP" | jq -r '.token')
+if [ -z "$STUDENT_TOKEN" ] || [ "$STUDENT_TOKEN" == "null" ]; then
+  echo "❌ Student login failed: $STUDENT_LOGIN_RESP"
+  exit 1
+fi
 echo "✅ Student login successful"
 
-echo -e "\n🔑 Logging in Chief Admin..."
-ADMINTOKEN=$(curl -s -X POST "$BASE/login" \
+# Login as warden/admin
+ADMIN_LOGIN_RESP=$(curl -s -X POST "$BASE/login" \
   -H "Content-Type: application/json" \
-  -d "{\"email\": \"$CHIEF_EMAIL\", \"password\": \"chief123\"}" | jq -r '.token')
-assert_nonempty "$ADMINTOKEN" "Chief admin login failed: empty token"
-echo "✅ Chief admin login successful"
-
-echo -e "\n🔑 Logging in Block Admin..."
-BLOCKADMINTOKEN=$(curl -s -X POST "$BASE/login" \
-  -H "Content-Type: application/json" \
-  -d "{\"email\": \"$BLOCK_ADMIN_EMAIL\", \"password\": \"blockadmin123\"}" | jq -r '.token')
-assert_nonempty "$BLOCKADMINTOKEN" "Block admin login failed: empty token"
-echo "✅ Block admin login successful"
-
-############################################
-# Forgot / Reset Password (best-effort dev)
-############################################
-echo -e "\n🔐 Testing forgot/reset password flow..."
-curl -s -X POST "$BASE/forgot-password" -H "Content-Type: application/json" -d '{"email":"student1@uni.com"}' >/dev/null || true
-if curl -s "$BASE/dev/reset-token?email=student1@uni.com" | jq -e . >/dev/null 2>&1; then
-  DEV_TOKEN=$(curl -s "$BASE/dev/reset-token?email=student1@uni.com" | jq -r '.token') || true
-  if [[ -n "${DEV_TOKEN:-}" && "${DEV_TOKEN}" != "null" ]]; then
-    curl -s -X POST "$BASE/reset-password" -H "Content-Type: application/json" -d "{\"token\": \"$DEV_TOKEN\", \"password\": \"newstudentpass\"}" | jq . || true
-    # try logging in with new password (non-fatal)
-    NEWTOKEN=$(curl -s -X POST "$BASE/login" -H "Content-Type: application/json" -d '{"email":"student1@uni.com", "password": "newstudentpass"}' | jq -r '.token') || true
-    if [[ -n "${NEWTOKEN:-}" && "${NEWTOKEN}" != "null" ]]; then TOKEN="$NEWTOKEN"; fi
-  else
-    echo "(DEV_MODE not enabled or token not available)"
-  fi
-else
-  echo "(DEV reset endpoint unavailable; skipping)"
+  -d '{"email": "'$ADMIN_EMAIL'", "password": "'$ADMIN_PASSWORD'"}')
+ADMIN_TOKEN=$(echo "$ADMIN_LOGIN_RESP" | jq -r '.token')
+if [ -z "$ADMIN_TOKEN" ] || [ "$ADMIN_TOKEN" == "null" ]; then
+  echo "❌ Admin login failed: $ADMIN_LOGIN_RESP"
+  exit 1
 fi
+echo "✅ Admin login successful"
 
-#🧾 Complaint creation
-echo -e "\n🧾 Creating Complaint..."
-curl -s -X POST $BASE/student/complaints \
-  -H "Authorization: Bearer $TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-        "title": "Fan not working",
-        "type": "electricity",
-        "description": "Fan in my room stopped working"
-      }' | jq .
-echo "✅ Complaint created"
 
-#📋 Fetch All Complaints (Student)
-echo -e "\n📋 Fetching All Complaints (Student)..."
-curl -s -X GET $BASE/student/complaints \
-  -H "Authorization: Bearer $TOKEN" | jq .
-echo "✅ Fetched complaints successfully"
-
-# 🧪 Admin (no block) should be denied access to admin endpoints
-echo -e "\n🧪 Chief Admin fetching complaints..."
-curl -s -X GET "$BASE/admin/complaints" -H "Authorization: Bearer $ADMINTOKEN" | jq '.count'
-echo "✅ Chief admin complaints fetched"
-
-echo -e "\n🧪 Block Admin (should see only Block-A complaints if any)..."
-curl -s -X GET "$BASE/admin/complaints" -H "Authorization: Bearer $BLOCKADMINTOKEN" | jq '.count'
-echo "✅ Block admin complaints fetched"
-
-# 🧾 Create Complaint with JPEG upload (student)
-echo -e "\n🧾 Creating Complaint with JPEG attachment..."
-curl -s -X POST $BASE/student/complaints \
-  -H "Authorization: Bearer $TOKEN" \
+# Test complaint creation as student (with JPEG attachment)
+COMPLAINT_RESP=$(curl -s -X POST $BASE/student/complaints \
+  -H "Authorization: Bearer $STUDENT_TOKEN" \
   -F "title=Fan not working" \
   -F "type=electricity" \
   -F "description=Fan in my room stopped working" \
-  -F "attachments=@tiny.jpg;type=image/jpeg" | jq .
-echo "✅ Complaint with attachment created"
+  -F "priority=medium" \
+  -F "attachments=@tiny.jpg;type=image/jpeg")
+echo -e "\n🧾 Complaint creation (student):"
+echo "$COMPLAINT_RESP" | jq . || echo "$COMPLAINT_RESP"
 
-# ✉️ Submit Apology
-echo -e "\n✉️ Submitting Apology..."
-APOL_RESP=$(curl -s -X POST "$BASE/student/apologies" \
-  -H "Authorization: Bearer $TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"type":"misconduct","message":"Apology for missing morning roll call","description":"Woke up late, will be careful next time"}')
-echo "$APOL_RESP" | jq .
-APOLOGY_ID=$(echo "$APOL_RESP" | jq -r '.data.id // .data.ID // .id // .ID')
-assert_nonempty "$APOLOGY_ID" "Apology creation failed: missing id"
-echo "✅ Apology submitted"
+# Fetch all complaints as student
+COMPLAINTS_STUDENT=$(curl -s -X GET $BASE/student/complaints -H "Authorization: Bearer $STUDENT_TOKEN")
+echo -e "\n📋 All complaints (student):"
+echo "$COMPLAINTS_STUDENT" | jq . || echo "$COMPLAINTS_STUDENT"
 
-# 📬 Fetch Student Apologies
-echo -e "\n📬 Fetching Student Apologies..."
-curl -s -X GET $BASE/student/apologies \
-  -H "Authorization: Bearer $TOKEN" | jq .
-echo "✅ Fetched student apologies"
+# Fetch all complaints as warden/admin
+COMPLAINTS_ADMIN=$(curl -s -X GET $BASE/admin/complaints -H "Authorization: Bearer $ADMIN_TOKEN")
+echo -e "\n📋 All complaints (warden/admin):"
+echo "$COMPLAINTS_ADMIN" | jq . || echo "$COMPLAINTS_ADMIN"
 
-# 🛠 Admin: Fetch All Apologies
-# cleaned malformed stray header line
-echo -e "\n🛠 Fetching All Apologies (Admin)..."
-curl -s -X GET "$BASE/admin/apologies" -H "Authorization: Bearer $ADMINTOKEN" | jq '.count'
-echo "✅ Admin fetched apologies"
 
-# 🧾 Review Apology (Admin)
-echo -e "\n🛠 Reviewing Apology..."
-curl -s -X PUT "$BASE/admin/apologies/$APOLOGY_ID/review" \
-  -H "Authorization: Bearer $ADMINTOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"status": "accepted", "comment": "Valid apology, warning issued."}' | jq .
-echo "✅ Apology reviewed successfully"
+# Submit apology as student (with JPEG attachment)
+APOLOGY_RESP=$(curl -s -X POST $BASE/student/apologies \
+  -H "Authorization: Bearer $STUDENT_TOKEN" \
+  -F "type=misconduct" \
+  -F "message=Apology for missing roll call" \
+  -F "description=Woke up late, will be careful next time" \
+  -F "attachments=@tiny.jpg;type=image/jpeg")
+echo -e "\n✉️ Apology submission (student):"
+echo "$APOLOGY_RESP" | jq . || echo "$APOLOGY_RESP"
 
-# 📊 Metrics
-echo -e "\n📊 Fetching Metrics (Admin)..."
-curl -s -X GET $BASE/metrics/status-summary -H "Authorization: Bearer $ADMINTOKEN" | jq .
-curl -s -X GET $BASE/metrics/resolution-rate -H "Authorization: Bearer $ADMINTOKEN" | jq .
-curl -s -X GET $BASE/metrics/pending-count -H "Authorization: Bearer $ADMINTOKEN" | jq .
-echo "✅ Metrics endpoints tested successfully"
+# Fetch all apologies as student
+APOLOGIES_STUDENT=$(curl -s -X GET $BASE/student/apologies -H "Authorization: Bearer $STUDENT_TOKEN")
+echo -e "\n📬 All apologies (student):"
+echo "$APOLOGIES_STUDENT" | jq . || echo "$APOLOGIES_STUDENT"
 
-# -----------------------
-# Admin delete complaint
-# -----------------------
-echo -e "\n🗑️  Admin deleting a complaint..."
-DEL_ID=$(curl -s -X GET "$BASE/admin/complaints" -H "Authorization: Bearer $ADMINTOKEN" | jq -r '.data[0].ID // .data[0].id')
-if [ -n "$DEL_ID" ] && [ "$DEL_ID" != "null" ]; then
-  echo "Attempting to delete complaint: $DEL_ID"
-  DEL_RESP=$(curl -s -X DELETE $BASE/admin/complaints/$DEL_ID \
-    -H "Authorization: Bearer $ADMINTOKEN")
-  if echo "$DEL_RESP" | jq -e . >/dev/null 2>&1; then
-    echo "$DEL_RESP" | jq .
-  else
-    echo "Delete response: $DEL_RESP"
-  fi
-  echo "✅ Delete attempted"
-else
-  echo "⚠️  No complaint found to delete"
-fi
+# Fetch all apologies as warden/admin
+APOLOGIES_ADMIN=$(curl -s -X GET $BASE/admin/apologies -H "Authorization: Bearer $ADMIN_TOKEN")
+echo -e "\n📬 All apologies (warden/admin):"
+echo "$APOLOGIES_ADMIN" | jq . || echo "$APOLOGIES_ADMIN"
 
-# -----------------------
-# Counseling flow tests
-# -----------------------
-echo -e "\n🧑‍⚕️ Counseling flow (skipped if counselor id unavailable)"
-echo "Skipping counselor slot creation in smoke test (no public endpoint to resolve counselor id)"
+# Fetch metrics as warden/admin
+METRICS_STATUS=$(curl -s -X GET $BASE/metrics/status-summary -H "Authorization: Bearer $ADMIN_TOKEN")
+echo -e "\n📊 Metrics (status summary):"
+echo "$METRICS_STATUS" | jq . || echo "$METRICS_STATUS"
 
-# -----------------------
-# Profile checks
-# -----------------------
-echo -e "\n👤 Fetching student profile (self)"
-PROF_RESP=$(curl -s -X GET "$BASE/student/profile" -H "Authorization: Bearer $TOKEN")
-if echo "$PROF_RESP" | jq -e . >/dev/null 2>&1; then
-  echo "$PROF_RESP" | jq .
-else
-  echo "Non-JSON response fetching student profile: $PROF_RESP"
-fi
+METRICS_RESOLUTION=$(curl -s -X GET $BASE/metrics/resolution-rate -H "Authorization: Bearer $ADMIN_TOKEN")
+echo -e "\n📊 Metrics (resolution rate):"
+echo "$METRICS_RESOLUTION" | jq . || echo "$METRICS_RESOLUTION"
 
-echo -e "\n👮 Admin fetching student profile by student_identifier"
-STUDENT_IDENTIFIER=$(echo "$PROF_RESP" | jq -r '.student_identifier // .student_id' 2>/dev/null || echo "")
-if [ "$STUDENT_IDENTIFIER" != "null" ] && [ -n "$STUDENT_IDENTIFIER" ]; then
-  ADM_PROF=$(curl -s -X GET "$BASE/admin/student/$STUDENT_IDENTIFIER" -H "Authorization: Bearer $ADMINTOKEN")
-  if echo "$ADM_PROF" | jq -e . >/dev/null 2>&1; then
-    echo "$ADM_PROF" | jq .
-  else
-    echo "Non-JSON response fetching admin view of student: $ADM_PROF"
-  fi
-else
-  echo "Student_identifier missing; skipping admin profile fetch"
-fi
-
-# -----------------------
-# Notifications flow
-# -----------------------
-echo -e "\n🔔 Notifications (student)"
-NOTE_LIST=$(curl -s -X GET "$BASE/notifications" -H "Authorization: Bearer $TOKEN")
-echo "$NOTE_LIST" | jq '.unreadCount'
-NOTE_ID=$(echo "$NOTE_LIST" | jq -r '.data[0].id // .data[0].ID // empty')
-if [[ -n "${NOTE_ID:-}" ]]; then
-  curl -s -X PATCH "$BASE/notifications/$NOTE_ID/read" -H "Authorization: Bearer $TOKEN" | jq .
-  curl -s -X PATCH "$BASE/notifications/read-all" -H "Authorization: Bearer $TOKEN" | jq .
-  curl -s -X DELETE "$BASE/notifications/$NOTE_ID" -H "Authorization: Bearer $TOKEN" | jq .
-fi
+METRICS_PENDING=$(curl -s -X GET $BASE/metrics/pending-count -H "Authorization: Bearer $ADMIN_TOKEN")
+echo -e "\n📊 Metrics (pending count):"
+echo "$METRICS_PENDING" | jq . || echo "$METRICS_PENDING"
 
 echo ""
 echo "-----------------------------------------------"

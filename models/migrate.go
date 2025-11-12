@@ -71,7 +71,6 @@ func AutoMigrateAll() {
 		&Apology{}, // ✅ only this line added
 		&ApologyAttachment{},
 		&PasswordResetToken{},
-		&CounselorSlot{},
 		&Notification{},
 	)
 
@@ -129,6 +128,14 @@ func AutoMigrateAll() {
 				NULL;
 			END;
 		END IF;
+		-- Ensure block column exists (char(1), A-Z)
+		IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='student_models' AND column_name='block') THEN
+			ALTER TABLE student_models ADD COLUMN block char(1) NOT NULL DEFAULT 'A' CHECK (block ~ '^[A-Z]$');
+		END IF;
+		-- Ensure room_no column exists
+		IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='student_models' AND column_name='room_no') THEN
+			ALTER TABLE student_models ADD COLUMN room_no text;
+		END IF;
 	END $$;`)
 
 	// --- Create password_reset_tokens table if not present (GORM sometimes misses creation in edge cases) ---
@@ -141,6 +148,13 @@ func AutoMigrateAll() {
 				expires_at timestamptz,
 				created_at timestamptz DEFAULT now()
 			);
+		END IF;
+	END $$;`)
+
+	// --- Ensure users table has block column for admin block assignment ---
+	config.DB.Exec(`DO $$ BEGIN
+		IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='block') THEN
+			ALTER TABLE users ADD COLUMN block char(1) NOT NULL DEFAULT 'A' CHECK (block ~ '^[A-Z]$');
 		END IF;
 	END $$;`)
 

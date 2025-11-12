@@ -68,13 +68,21 @@ func Signup(c *fiber.Ctx) error {
 	}
 
 	// ✅ Create the new user
+	// For students, map hostel to block and keep both in sync
+	blockVal := data["block"]
+	if role == models.Student {
+		if data["hostel"] != "" {
+			blockVal = data["hostel"]
+			data["block"] = blockVal
+		}
+	}
 	user := models.User{
 		ID:       uuid.New(),
 		Name:     data["name"],
 		Email:    data["email"],
 		Password: string(hashedPassword),
 		Role:     models.RoleType(data["role"]),
-		Block:    data["block"],
+		Block:    blockVal,
 	}
 
 	// ✅ Save user to the database
@@ -91,7 +99,7 @@ func Signup(c *fiber.Ctx) error {
 		student := models.StudentModel{
 			UserID:            user.ID,
 			StudentIdentifier: data["student_id"],
-			Hostel:            data["hostel"],
+			Block:             data["block"],
 			RoomNo:            data["room_no"],
 		}
 		if err := config.DB.Create(&student).Error; err != nil {
@@ -155,4 +163,21 @@ func Logout(c *fiber.Ctx) error {
 	})
 
 	return c.JSON(fiber.Map{"message": "Logged out successfully"})
+}
+
+// --- Password Reset & Dev Token Stubs ---
+
+// POST /forgot-password
+func ForgotPassword(c *fiber.Ctx) error {
+	return c.JSON(fiber.Map{"message": "If this email exists, a reset link will be sent."})
+}
+
+// POST /reset-password
+func ResetPassword(c *fiber.Ctx) error {
+	return c.JSON(fiber.Map{"message": "Password reset successful (stub)."})
+}
+
+// GET /dev/reset-token
+func DevGetResetToken(c *fiber.Ctx) error {
+	return c.JSON(fiber.Map{"token": "dev-reset-token-stub"})
 }

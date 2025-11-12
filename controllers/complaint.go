@@ -137,10 +137,10 @@ func CreateComplaint(c *fiber.Ctx) error {
 		if err := config.DB.Where("user_id = ?", comp.UserID).First(&sm).Error; err != nil {
 			return
 		}
-		hostel := sm.Hostel
+		block := sm.Block
 		var admins []models.User
-		if hostel != "" {
-			config.DB.Where("role = ? AND block = ?", models.Admin, hostel).Find(&admins)
+		if block != "" {
+			config.DB.Where("role = ? AND block = ?", models.Admin, block).Find(&admins)
 		}
 		var chiefs []models.User
 		config.DB.Where("role = ?", models.ChiefAdmin).Find(&chiefs)
@@ -370,7 +370,7 @@ func DeleteComplaint(c *fiber.Ctx) error {
 			return c.Status(403).JSON(fiber.Map{"error": "Forbidden: cannot validate admin"})
 		}
 		adminBlock := adminUser.Block
-		studentBlock := complaint.Student.Hostel
+		studentBlock := complaint.Student.Block
 		if strings.TrimSpace(adminBlock) == "" || strings.TrimSpace(studentBlock) == "" || adminBlock != studentBlock {
 			return c.Status(403).JSON(fiber.Map{"error": "Forbidden: admin not authorized to delete this complaint"})
 		}
@@ -484,7 +484,7 @@ func GetComplaintbyID(c *fiber.Ctx) error {
 			"id":      complaint.User.ID,
 			"name":    complaint.User.Name,
 			"email":   complaint.User.Email,
-			"hostel":  complaint.Student.Hostel,
+			"block":   complaint.Student.Block,
 			"room_no": complaint.Student.RoomNo,
 		},
 		"attachments":     complaint.Attachments,
@@ -513,14 +513,14 @@ func GetAllComplaintsAdmin(c *fiber.Ctx) error {
 		query = query.Where("type = ?", complaintType)
 	}
 
-	// If the requester is an admin (not chief_admin), restrict to their block
+	// If the requester is an admin (not chief_admin), restrict to their block (A-Z)
 	if role == string(models.Admin) && userID != "" {
-		// get requesting user's block
 		var reqUser models.User
 		if err := config.DB.First(&reqUser, "id = ?", userID).Error; err == nil {
 			if reqUser.Block != "" {
-				// complaints are associated to students who have Hostel field; filter by that
-				query = query.Joins("JOIN student_models ON student_models.user_id = complaints.user_id").Where("student_models.hostel = ?", reqUser.Block)
+				// Only show complaints for students in the same block
+				query = query.Joins("LEFT JOIN student_models ON student_models.user_id = complaints.user_id").
+					Where("student_models.block = ?", reqUser.Block)
 			}
 		}
 	}

@@ -81,17 +81,7 @@ func SetupRoutes(app *fiber.App) {
 	protected.Post("/complaints/:id/timeline", controllers.AddTimelineEntry)
 	protected.Get("/complaints/:id/timeline", controllers.GetTimeline)
 
-	// -------------------------------
-	// Counseling / Slots
-	// -------------------------------
-	protected.Get("/counselors/:id/slots", controllers.ListCounselorSlots)
-	// create slot (admin/counselor)
-	protected.Post("/counselors/:id/slots", controllers.CreateCounselorSlot)
-	// Admin books a slot for a student
-	admin.Post("/counselors/:id/book", controllers.BookCounselorSlot)
-	// Counselor updates session notes/progress (only counselor role)
-	counselor := protected.Group("/counselor", middlewares.RequireRole("counselor"))
-	counselor.Post("/sessions/:id/update", controllers.CounselorUpdateSession)
+	// (Counselor/counseling routes removed)
 
 	// DEV helper to retrieve latest reset token (only when DEV_MODE=true)
 	api.Get("/dev/reset-token", controllers.DevGetResetToken)
@@ -99,6 +89,6 @@ func SetupRoutes(app *fiber.App) {
 	// -------------------------------
 	// Profile routes
 	// -------------------------------
-	student.Get("/profile", controllers.GetOwnProfile)
-	admin.Get("/student/:student_identifier", controllers.GetStudentProfileAdmin)
+	// student.Get("/profile", controllers.GetOwnProfile) // removed
+	// admin.Get("/student/:student_identifier", controllers.GetStudentProfileAdmin) // removed
 }

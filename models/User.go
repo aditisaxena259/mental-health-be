@@ -21,7 +21,7 @@ type User struct {
 	Email    string    `gorm:"unique;not null" json:"email"`
 	Password string    `gorm:"not null" json:"password"`
 	Role     RoleType  `gorm:"type:user_role;not null" json:"role"`
-	// Block is used to map admin users to a hostel block. For students, hostel info is in StudentModel.
-	Block     string    `gorm:"type:text" json:"block"`
+	// Block is used to map admin users to a hostel block. For students, block info is in StudentModel.
+	Block     string    `gorm:"type:char(1);not null;check:block ~ '^[A-Z]$'" json:"block"`
 	CreatedAt time.Time `json:"created_at"`
 }

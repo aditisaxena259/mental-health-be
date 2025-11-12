@@ -46,7 +46,8 @@ type Complaint struct {
 	Status            ComplaintStatus   `gorm:"type:status_type;default:'open'"`
 	CreatedAt         time.Time         `gorm:"autoCreateTime"`
 
-	User        User            `gorm:"foreignKey:UserID;references:ID" json:"user"`
+	User User `gorm:"foreignKey:UserID;references:ID" json:"user"`
+	// Fix relationship: UserID (complaint) -> UserID (student_models)
 	Student     StudentModel    `gorm:"foreignKey:UserID;references:UserID" json:"student"`
 	Attachments []Attachment    `gorm:"foreignKey:ComplaintID" json:"attachments"`
 	Timeline    []TimelineEntry `gorm:"foreignKey:ComplaintID" json:"timeline"`

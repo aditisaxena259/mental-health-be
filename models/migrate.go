@@ -75,6 +75,20 @@ func AutoMigrateAll() {
 		&Notification{},
 	)
 
+	// --- Explicitly ensure apology_attachments table exists (AutoMigrate can occasionally skip under race or prior partial failures) ---
+	config.DB.Exec(`DO $$ BEGIN
+		IF NOT EXISTS (SELECT 1 FROM pg_tables WHERE schemaname = CURRENT_SCHEMA() AND tablename = 'apology_attachments') THEN
+			CREATE TABLE apology_attachments (
+				id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+				apology_id uuid NOT NULL REFERENCES apologies(id) ON DELETE CASCADE,
+				file_name text,
+				file_url text,
+				public_id text,
+				size text
+			);
+		END IF;
+	END $$;`)
+
 	// --- Enforce correct column types ---
 	config.DB.Exec(`
 		ALTER TABLE complaints 

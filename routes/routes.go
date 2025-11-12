@@ -15,6 +15,8 @@ func SetupRoutes(app *fiber.App) {
 	api.Post("/signup", controllers.Signup)
 	api.Post("/login", controllers.Login)
 	api.Post("/logout", controllers.Logout)
+	// Cloudinary health (keep public)
+	api.Get("/health/cloudinary", controllers.CloudinaryPing)
 
 	// -------------------------------
 	// PROTECTED ROUTES (JWT required)
@@ -36,8 +38,6 @@ func SetupRoutes(app *fiber.App) {
 	// ADMIN / WARDEN ROUTES
 	// -------------------------------
 	admin := protected.Group("/admin", middlewares.RequireRole("admin", "chief_admin"))
-	// Health/ping endpoints
-	api.Get("/health/cloudinary", controllers.CloudinaryPing)
 
 	// 🧾 Complaints
 	admin.Get("/complaints", controllers.GetAllComplaintsAdmin)

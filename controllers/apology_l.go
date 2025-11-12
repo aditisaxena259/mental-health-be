@@ -53,9 +53,8 @@ func SubmitApology(c *fiber.Ctx) error {
 	var sm models.StudentModel
 	if err := config.DB.Where("user_id = ?", studentUUID).First(&sm).Error; err == nil {
 		// use StudentIdentifier for external mapping
-		// Apology model will include StudentIdentifier in JSON response if present
-		// but keep StudentID for DB relations
-		apology.StudentID = studentUUID
+		// keep StudentID for DB relations
+		apology.StudentIdentifier = sm.StudentIdentifier
 	}
 
 	if err := config.DB.Create(&apology).Error; err != nil {
@@ -180,13 +179,21 @@ func GetStudentApologies(c *fiber.Ctx) error {
 		return c.Status(401).JSON(fiber.Map{"error": "Unauthorized"})
 	}
 
+	// Ensure we query using UUID type to match column type and avoid driver casting issues
+	sid, err := uuid.Parse(userID)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{"error": "Invalid user ID"})
+	}
+
 	var apologies []models.Apology
 	if err := config.DB.
 		Preload("Student.User").Preload("Attachments").
-		Where("student_id = ?", userID).
+		Where("student_id = ?", sid.String()).
 		Order("created_at desc").
 		Find(&apologies).Error; err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": "Failed to fetch apologies"})
+		// Log for server diagnostics
+		fmt.Println("[ERROR] GetStudentApologies:", err)
+		return c.Status(500).JSON(fiber.Map{"error": "Failed to fetch apologies", "details": err.Error()})
 	}
 
 	if len(apologies) == 0 {

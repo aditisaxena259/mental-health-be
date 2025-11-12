@@ -1,7 +1,12 @@
 package controllers
 
 import (
+	"fmt"
+	"os"
+	"path/filepath"
+
 	"github.com/aditisaxena259/mental-health-be/config"
+	"github.com/aditisaxena259/mental-health-be/helpers"
 	"github.com/aditisaxena259/mental-health-be/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -15,12 +20,15 @@ func SubmitApology(c *fiber.Ctx) error {
 	}
 
 	var input struct {
-		Type        models.ApologyType `json:"type"`
-		Message     string             `json:"message"`
-		Description string             `json:"description"`
+		Type        models.ApologyType `form:"type" json:"type"`
+		Message     string             `form:"message" json:"message"`
+		Description string             `form:"description" json:"description"`
 	}
-
-	if err := c.BodyParser(&input); err != nil {
+	if form, _ := c.MultipartForm(); form != nil {
+		input.Type = models.ApologyType(c.FormValue("type"))
+		input.Message = c.FormValue("message")
+		input.Description = c.FormValue("description")
+	} else if err := c.BodyParser(&input); err != nil {
 		return c.Status(400).JSON(fiber.Map{"error": "Invalid input", "details": err.Error()})
 	}
 
@@ -52,6 +60,67 @@ func SubmitApology(c *fiber.Ctx) error {
 
 	if err := config.DB.Create(&apology).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to submit apology", "details": err.Error()})
+	}
+
+	// If multipart attachments are included, upload to Cloudinary and save records
+	if form, _ := c.MultipartForm(); form != nil {
+		files := form.File["attachments"]
+		if len(files) > 0 {
+			cld, cldErr := helpers.InitCloudinary()
+			// Ensure temp dir exists
+			_ = os.MkdirAll("./uploads/apologies", 0755)
+			for _, fh := range files {
+				if fh == nil {
+					continue
+				}
+				// Only accept JPEGs
+				ext := filepath.Ext(fh.Filename)
+				if ext == "" {
+					ext = ".jpg"
+				}
+				tmpPath := fmt.Sprintf("./uploads/apologies/%s_%s", apology.ID.String(), fh.Filename)
+				if err := c.SaveFile(fh, tmpPath); err != nil {
+					return c.Status(500).JSON(fiber.Map{"error": "Failed to save attachment", "details": err.Error()})
+				}
+				// default values for fallback
+				var fileURL, publicID, sizeStr string
+				// try Cloudinary if configured
+				if cldErr == nil {
+					if uploadRes, upErr := cld.UploadJPEG(tmpPath, "apologies/"+apology.ID.String(), uuid.New().String()); upErr == nil {
+						fileURL = uploadRes.SecureURL
+						publicID = uploadRes.PublicID
+						sizeStr = fmt.Sprintf("%d", uploadRes.Bytes)
+						// cleanup tmp after successful upload
+						_ = os.Remove(tmpPath)
+					} else {
+						// fallback to local file
+						if fi, err := os.Stat(tmpPath); err == nil {
+							sizeStr = fmt.Sprintf("%d", fi.Size())
+						}
+						fileURL = tmpPath
+						publicID = ""
+					}
+				} else {
+					// no Cloudinary configured; fallback to local file path
+					if fi, err := os.Stat(tmpPath); err == nil {
+						sizeStr = fmt.Sprintf("%d", fi.Size())
+					}
+					fileURL = tmpPath
+					publicID = ""
+				}
+				att := models.ApologyAttachment{
+					ID:        uuid.New(),
+					ApologyID: apology.ID,
+					FileName:  fh.Filename,
+					FileURL:   fileURL,
+					PublicID:  publicID,
+					Size:      sizeStr,
+				}
+				if err := config.DB.Create(&att).Error; err != nil {
+					return c.Status(500).JSON(fiber.Map{"error": "Failed to persist attachment", "details": err.Error()})
+				}
+			}
+		}
 	}
 
 	// create notifications for admins of the student's block + chief admins
@@ -95,8 +164,8 @@ func SubmitApology(c *fiber.Ctx) error {
 		}
 	}(apology)
 
-	// ✅ Preload after creation so response includes Student details
-	config.DB.Preload("Student.User").First(&apology, "id = ?", apology.ID)
+	// ✅ Preload after creation so response includes Student details and attachments
+	config.DB.Preload("Student.User").Preload("Attachments").First(&apology, "id = ?", apology.ID)
 
 	return c.JSON(fiber.Map{
 		"message": "Apology letter submitted successfully",
@@ -113,7 +182,7 @@ func GetStudentApologies(c *fiber.Ctx) error {
 
 	var apologies []models.Apology
 	if err := config.DB.
-		Preload("Student.User").
+		Preload("Student.User").Preload("Attachments").
 		Where("student_id = ?", userID).
 		Order("created_at desc").
 		Find(&apologies).Error; err != nil {
@@ -130,7 +199,7 @@ func GetStudentApologies(c *fiber.Ctx) error {
 // 🧑‍💼 ADMIN — Get All or Filtered Apologies
 func GetApologies(c *fiber.Ctx) error {
 	var apologies []models.Apology
-	query := config.DB.Preload("Student.User")
+	query := config.DB.Preload("Student.User").Preload("Attachments")
 
 	if apologyType := c.Query("type"); apologyType != "" {
 		query = query.Where("apology_type = ?", apologyType)
@@ -151,7 +220,7 @@ func GetApologyByID(c *fiber.Ctx) error {
 	id := c.Params("id")
 	var apology models.Apology
 
-	if err := config.DB.Preload("Student.User").First(&apology, "id = ?", id).Error; err != nil {
+	if err := config.DB.Preload("Student.User").Preload("Attachments").First(&apology, "id = ?", id).Error; err != nil {
 		return c.Status(404).JSON(fiber.Map{"error": "Apology not found"})
 	}
 

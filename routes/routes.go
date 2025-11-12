@@ -36,6 +36,8 @@ func SetupRoutes(app *fiber.App) {
 	// ADMIN / WARDEN ROUTES
 	// -------------------------------
 	admin := protected.Group("/admin", middlewares.RequireRole("admin", "chief_admin"))
+	// Health/ping endpoints
+	api.Get("/health/cloudinary", controllers.CloudinaryPing)
 
 	// 🧾 Complaints
 	admin.Get("/complaints", controllers.GetAllComplaintsAdmin)

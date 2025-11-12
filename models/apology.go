@@ -37,4 +37,7 @@ type Apology struct {
 
 	// ✅ fix relationship properly
 	Student StudentModel `gorm:"foreignKey:StudentID;references:UserID;constraint:OnDelete:CASCADE;" json:"student"`
+
+	// Attachments uploaded with the apology
+	Attachments []ApologyAttachment `gorm:"foreignKey:ApologyID;constraint:OnDelete:CASCADE;" json:"attachments"`
 }

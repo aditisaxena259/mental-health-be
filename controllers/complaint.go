@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/aditisaxena259/mental-health-be/config"
+	"github.com/aditisaxena259/mental-health-be/helpers"
 	"github.com/aditisaxena259/mental-health-be/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -76,19 +77,52 @@ func CreateComplaint(c *fiber.Ctx) error {
 				tx.Rollback()
 				return c.Status(400).JSON(fiber.Map{"error": "Only JPEG attachments are allowed"})
 			}
+			// Save temporarily to disk then upload to Cloudinary
 			saved, saveErr := saveAttachmentFile(fh, complaint.ID)
 			if saveErr != nil {
 				tx.Rollback()
 				return c.Status(500).JSON(fiber.Map{"error": "Failed to save attachment", "details": saveErr.Error()})
 			}
-			att := models.Attachment{
-				ID:          uuid.New(),
-				ComplaintID: complaint.ID,
-				FileName:    fh.Filename,
-				FileURL:     saved.PublicURL,
-				Size:        fmt.Sprintf("%d", saved.Size),
-				FilePath:    saved.Path,
+			// Upload to Cloudinary (fallback to local if not configured)
+			var att models.Attachment
+			if cld, cldErr := helpers.InitCloudinary(); cldErr == nil {
+				if upRes, upErr := cld.UploadJPEG(saved.Path, "complaints/"+complaint.ID.String(), uuid.New().String()); upErr == nil {
+					att = models.Attachment{
+						ID:          uuid.New(),
+						ComplaintID: complaint.ID,
+						FileName:    fh.Filename,
+						FileURL:     upRes.SecureURL,
+						PublicID:    upRes.PublicID,
+						Size:        fmt.Sprintf("%d", upRes.Bytes),
+						FilePath:    saved.Path,
+					}
+					// Best-effort: remove local temp file after successful upload
+					_ = os.Remove(saved.Path)
+				} else {
+					// Fallback: keep local, but provide web-accessible URL
+					att = models.Attachment{
+						ID:          uuid.New(),
+						ComplaintID: complaint.ID,
+						FileName:    fh.Filename,
+						FileURL:     saved.PublicURL,
+						PublicID:    "",
+						Size:        fmt.Sprintf("%d", saved.Size),
+						FilePath:    saved.Path,
+					}
+				}
+			} else {
+				// Fallback: keep local, but provide web-accessible URL
+				att = models.Attachment{
+					ID:          uuid.New(),
+					ComplaintID: complaint.ID,
+					FileName:    fh.Filename,
+					FileURL:     saved.PublicURL,
+					PublicID:    "",
+					Size:        fmt.Sprintf("%d", saved.Size),
+					FilePath:    saved.Path,
+				}
 			}
+
 			if err := tx.Create(&att).Error; err != nil {
 				tx.Rollback()
 				return c.Status(500).JSON(fiber.Map{"error": "Failed to create attachment record"})
@@ -171,8 +205,10 @@ func saveAttachmentFile(fh *multipart.FileHeader, complaintID uuid.UUID) (*saved
 	if err != nil {
 		return nil, err
 	}
-
-	return &savedFileInfo{Path: dstPath, PublicURL: dstPath, Size: written}, nil
+	// Convert local FS path to a URL path served by app.Static("/uploads", "./uploads")
+	// Example: ./uploads/attachments/<complaintID>/<filename> -> /uploads/attachments/<complaintID>/<filename>
+	relURL := filepath.ToSlash(filepath.Join("/uploads/attachments", complaintID.String(), fh.Filename))
+	return &savedFileInfo{Path: dstPath, PublicURL: relURL, Size: written}, nil
 }
 
 func isJPEG(fh *multipart.FileHeader) bool {
@@ -227,7 +263,12 @@ func GetAllComplaints(c *fiber.Ctx) error {
 	if len(complaints) == 0 {
 		return c.JSON(fiber.Map{"message": "No complaints found", "data": []models.Complaint{}})
 	}
-
+	// Ensure attachments are at least empty arrays for frontend rendering
+	for i := range complaints {
+		if complaints[i].Attachments == nil {
+			complaints[i].Attachments = make([]models.Attachment, 0)
+		}
+	}
 	return c.JSON(fiber.Map{"count": len(complaints), "data": complaints})
 }
 
@@ -363,7 +404,18 @@ func DeleteComplaint(c *fiber.Ctx) error {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to commit deletion", "details": err.Error()})
 	}
 
-	// 4) Best-effort: remove attachments directory from disk
+	// 4) Best-effort: remove attachments from Cloudinary
+	if len(complaint.Attachments) > 0 {
+		if cld, cldErr := helpers.InitCloudinary(); cldErr == nil {
+			for _, a := range complaint.Attachments {
+				if a.PublicID != "" {
+					_ = cld.Destroy(a.PublicID)
+				}
+			}
+		}
+	}
+
+	// 5) Best-effort: remove attachments directory from disk
 	// Directory pattern: ./uploads/attachments/<complaintID>
 	attachDir := filepath.Join("./uploads/attachments", compUUID.String())
 	if stat, statErr := os.Stat(attachDir); statErr == nil && stat.IsDir() {
@@ -410,6 +462,10 @@ func GetComplaintbyID(c *fiber.Ctx) error {
 			"error":   "Complaint not found",
 			"details": err.Error(),
 		})
+	}
+
+	if complaint.Attachments == nil {
+		complaint.Attachments = make([]models.Attachment, 0)
 	}
 
 	// Fetch user's past complaints (excluding this one)
@@ -472,7 +528,12 @@ func GetAllComplaintsAdmin(c *fiber.Ctx) error {
 	if err := query.Order("created_at desc").Find(&complaints).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to fetch complaints"})
 	}
-
+	// Normalize nil attachments to empty arrays for frontend clients
+	for i := range complaints {
+		if complaints[i].Attachments == nil {
+			complaints[i].Attachments = make([]models.Attachment, 0)
+		}
+	}
 	return c.JSON(fiber.Map{
 		"count": len(complaints),
 		"data":  complaints,

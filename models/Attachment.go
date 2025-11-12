@@ -7,6 +7,7 @@ type Attachment struct {
 	ComplaintID uuid.UUID `gorm:"not null"`
 	FileName    string
 	FileURL     string
+	PublicID    string // cloudinary public id
 	Size        string
 	FilePath    string
 }

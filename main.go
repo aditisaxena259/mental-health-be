@@ -37,6 +37,9 @@ func main() {
 		AllowHeaders: "Origin, Content-Type, Accept, Authorization",
 	}))
 
+	// Serve local uploads (used when Cloudinary is not configured)
+	app.Static("/uploads", "./uploads")
+
 	// Setup API routes
 	routes.SetupRoutes(app)
 

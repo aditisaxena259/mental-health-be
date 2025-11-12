@@ -69,6 +69,7 @@ func AutoMigrateAll() {
 		&Attachment{},
 		&TimelineEntry{},
 		&Apology{}, // ✅ only this line added
+		&ApologyAttachment{},
 		&PasswordResetToken{},
 		&CounselorSlot{},
 		&Notification{},
@@ -92,6 +93,10 @@ func AutoMigrateAll() {
 		-- Add priority column for complaints (text with default 'medium')
 		IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='complaints' AND column_name='priority') THEN
 			ALTER TABLE complaints ADD COLUMN priority text DEFAULT 'medium';
+		END IF;
+		-- Add PublicID column for attachments
+		IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='attachments' AND column_name='public_id') THEN
+			ALTER TABLE attachments ADD COLUMN public_id text;
 		END IF;
 	END $$;`)
 
